@@ -34,9 +34,7 @@ namespace qxgl {
     Vector3() : value( 0.0F, 0.0F, 0.0F ) {}
 
     Vector3( const Vector3 & )            = default;
-    Vector3( Vector3 && )                 = delete;
     Vector3 &operator=( const Vector3 & ) = default;
-    Vector3 &operator=( Vector3 && )      = delete;
 
     /// Construtor com coordenadas x, y e z.
     Vector3( float x, float y, float z ) : value( x, y, z ) {}
@@ -156,18 +154,6 @@ namespace qxgl {
     /// Retorna referência constante ao glm::vec3 encapsulado.
     [[nodiscard]] const glm::vec3 &glm() const {
       return value;
-    }
-
-    [[nodiscard]] float x() const {
-      return value.x;
-    }
-
-    [[nodiscard]] float y() const {
-      return value.y;
-    }
-
-    [[nodiscard]] float z() const {
-      return value.z;
     }
   };
 }  // namespace qxgl

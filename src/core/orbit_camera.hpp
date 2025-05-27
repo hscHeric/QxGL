@@ -6,36 +6,68 @@
 namespace qxgl {
 
   /**
-   * @brief Câmera orbital (gira ao redor de um ponto-alvo).
+   * @class OrbitCamera
+   * @brief Câmera orbital que gira ao redor de um ponto-alvo.
    *
-   * Útil para visualizações livres, orbitando em torno de uma cena central,
-   * como modelos 3D ou ambientes.
+   * Essa câmera é útil para visualizações livres que orbitam em torno de um ponto central,
+   * como em visualização de modelos 3D ou ambientes interativos.
    */
   class OrbitCamera : public Camera {
   private:
-    Vector3 target;     ///< Ponto-alvo da órbita
-    float   distance;   ///< Distância da câmera ao alvo
-    float   azimuth;    ///< Ângulo horizontal em graus (em torno do eixo Y)
-    float   elevation;  ///< Ângulo vertical em graus (em torno do eixo X)
+    Vector3 target;     ///< Ponto-alvo da órbita, em torno do qual a câmera gira.
+    float   distance;   ///< Distância da câmera ao ponto-alvo.
+    float   azimuth;    ///< Ângulo horizontal em graus, rotacionando ao redor do eixo Y.
+    float   elevation;  ///< Ângulo vertical em graus, rotacionando ao redor do eixo X.
 
   public:
-    /// Construtor padrão
+    /**
+     * @brief Construtor padrão.
+     * Inicializa a câmera com valores padrão para distância, ângulos e ponto-alvo.
+     */
     OrbitCamera();
 
-    /// Define o ponto-alvo da órbita
+    /**
+     * @brief Define o ponto-alvo da órbita.
+     * @param t Novo ponto-alvo para a câmera orbitar.
+     */
     void setTarget( const Vector3 &t );
 
-    /// Define a distância da câmera até o alvo
+    /**
+     * @brief Define a distância da câmera ao ponto-alvo.
+     * @param d Distância desejada.
+     */
     void setDistance( float d );
 
-    /// Altera os ângulos de rotação (azimute e elevação)
+    /**
+     * @brief Altera os ângulos de rotação da câmera.
+     *
+     * Incrementa os ângulos azimute (horizontal) e elevação (vertical).
+     * Os ângulos são fornecidos em graus.
+     *
+     * @param deltaAzimuth Incremento no ângulo azimute (em graus).
+     * @param deltaElevation Incremento no ângulo elevação (em graus).
+     */
     void rotate( float deltaAzimuth, float deltaElevation );
 
-    /// Atualiza a matriz de visualização com base na órbita
+    /**
+     * @brief Atualiza a matriz de visualização baseada na posição orbital da câmera.
+     *
+     * Essa função recalcula a posição da câmera com base no ponto-alvo,
+     * distância, azimute e elevação, e atualiza a matriz de visualização.
+     */
     void updateViewMatrix() override;
 
-    /// Atualiza a matriz de projeção (perspectiva padrão)
+    /**
+     * @brief Atualiza a matriz de projeção perspectiva.
+     *
+     * Implementa uma projeção perspectiva padrão, ajustada à largura e altura da viewport.
+     *
+     * @param width Largura da viewport.
+     * @param height Altura da viewport.
+     */
     void updateProjectionMatrix( int width, int height ) override;
   };
+
 }  // namespace qxgl
-#endif  // !QXGL_ORBIT_CAMERA_HPP
+
+#endif  // QXGL_ORBIT_CAMERA_HPP

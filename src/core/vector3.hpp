@@ -1,233 +1,196 @@
 #ifndef QXGL_VECTOR3_HPP
 #define QXGL_VECTOR3_HPP
 
-#include <glm/ext/vector_float3.hpp>
-#include <glm/glm.hpp>
-#include <glm/gtc/constants.hpp>
-
 namespace qxgl {
+
+  /**
+   * @brief Constante PI para cálculos com ângulos.
+   */
+  constexpr float PI = 3.14159265358979323846F;
 
   /**
    * @brief Converte um valor de radianos para graus.
    * @param rad Valor em radianos.
    * @return Valor equivalente em graus.
    */
-  constexpr float radToDeg( float rad ) {
-    return ( 180.0F / glm::pi<float>() ) * rad;
-  }
+  constexpr float radToDeg( float rad );
 
   /**
    * @brief Converte um valor de graus para radianos.
    * @param deg Valor em graus.
    * @return Valor equivalente em radianos.
    */
-  constexpr float degToRad( float deg ) {
-    return ( glm::pi<float>() / 180.0F ) * deg;
-  }
+  constexpr float degToRad( float deg );
 
   /**
    * @class Vector3
-   * @brief Classe utilitária para vetores 3D, encapsulando glm::vec3 com funcionalidades
-   * adicionais.
+   * @brief Classe utilitária para vetores tridimensionais (3D), com operações vetoriais clássicas.
    */
   class Vector3 {
   public:
-    /// Valor interno representado como glm::vec3.
-    glm::vec3 value;
+    /**
+     * @brief Componente X do vetor.
+     */
+    float x;
 
-    /// @brief Construtor padrão. Inicializa como vetor nulo (0, 0, 0).
-    Vector3() : value( 0.0F, 0.0F, 0.0F ) {}
+    /**
+     * @brief Componente Y do vetor.
+     */
+    float y;
 
-    Vector3( Vector3 && )                 = delete;
-    Vector3 &operator=( Vector3 && )      = delete;
+    /**
+     * @brief Componente Z do vetor.
+     */
+    float z;
+
+    /**
+     * @brief Construtor padrão. Inicializa o vetor com valores (0, 0, 0).
+     */
+    Vector3();
+
     Vector3( const Vector3 & )            = default;
+    Vector3( Vector3 && )                 = delete;
     Vector3 &operator=( const Vector3 & ) = default;
+    Vector3 &operator=( Vector3 && )      = delete;
 
     /**
-     * @brief Construtor a partir de componentes individuais.
-     * @param x Componente X.
-     * @param y Componente Y.
-     * @param z Componente Z.
+     * @brief Construtor com valores iniciais.
+     * @param x Valor da componente X.
+     * @param y Valor da componente Y.
+     * @param z Valor da componente Z.
      */
-    Vector3( float x, float y, float z ) : value( x, y, z ) {}
+    Vector3( float x, float y, float z );
 
     /**
-     * @brief Construtor a partir de um glm::vec3.
-     * @param vec Vetor glm.
+     * @brief Destrutor padrão.
      */
-    Vector3( const glm::vec3 &vec ) : value( vec ) {}
-
-    /// @brief Destrutor padrão.
     ~Vector3() = default;
 
     /**
-     * @brief Define manualmente os valores do vetor.
-     * @param x Componente X.
-     * @param y Componente Y.
-     * @param z Componente Z.
-     */
-    void set( float x, float y, float z ) {
-      value = glm::vec3( x, y, z );
-    }
-
-    /**
-     * @brief Retorna o comprimento (magnitude) do vetor.
+     * @brief Calcula o comprimento (norma/modulo) do vetor.
      * @return Comprimento do vetor.
      */
-    [[nodiscard]] float length() const {
-      return glm::length( value );
-    }
+    [[nodiscard]] float length() const;
 
     /**
-     * @brief Retorna o quadrado do comprimento do vetor (evita cálculo de raiz).
-     * @return Quadrado da magnitude do vetor.
+     * @brief Calcula o quadrado da norma do vetor (evita cálculo de raiz).
+     * @return Comprimento ao quadrado do vetor.
      */
-    [[nodiscard]] float lengthSquared() const {
-      return glm::dot( value, value );
-    }
+    [[nodiscard]] float lengthSquared() const;
 
     /**
-     * @brief Normaliza o vetor (magnitude passa a ser 1).
+     * @brief Normaliza o vetor atual, tornando-o unitário.
      */
-    void normalize() {
-      value = glm::normalize( value );
-    }
+    void normalize();
 
     /**
-     * @brief Retorna uma cópia normalizada do vetor.
-     * @return Vetor unitário.
+     * @brief Retorna uma cópia normalizada do vetor (unitário).
+     * @return Vetor unitário equivalente.
      */
-    [[nodiscard]] Vector3 unit() const {
-      return glm::normalize( value );
-    }
+    [[nodiscard]] Vector3 unit() const;
 
     /**
-     * @brief Retorna a projeção deste vetor sobre outro.
-     * @param v Vetor base da projeção.
-     * @return Vetor projetado.
+     * @brief Calcula a projeção deste vetor sobre outro.
+     * @param v Vetor sobre o qual será feita a projeção.
+     * @return Vetor resultante da projeção.
      */
-    [[nodiscard]] Vector3 projectOnto( const Vector3 &v ) const {
-      glm::vec3 u = v.value;
-      return ( glm::dot( value, u ) / glm::dot( u, u ) ) * u;
-    }
+    [[nodiscard]] Vector3 projectOnto( const Vector3 &v ) const;
 
     /**
-     * @brief Atribui os valores de outro vetor.
-     * @param v Vetor de origem.
+     * @brief Atribui os valores de outro vetor a este.
+     * @param v Vetor a ser copiado.
      */
-    void assign( const Vector3 &v ) {
-      value = v.value;
-    }
+    void assign( const Vector3 &v );
 
     /**
      * @brief Soma este vetor com outro.
      * @param v Vetor a ser somado.
-     * @return Resultado da soma.
+     * @return Resultado da soma vetorial.
      */
-    [[nodiscard]] Vector3 add( const Vector3 &v ) const {
-      return value + v.value;
-    }
+    [[nodiscard]] Vector3 add( const Vector3 &v ) const;
 
     /**
-     * @brief Soma outro vetor a este (in-place).
+     * @brief Soma outro vetor a este vetor (in-place).
      * @param v Vetor a ser somado.
      */
-    void addInPlace( const Vector3 &v ) {
-      value += v.value;
-    }
+    void addInPlace( const Vector3 &v );
 
     /**
-     * @brief Subtrai outro vetor deste.
+     * @brief Subtrai outro vetor deste vetor.
      * @param v Vetor a ser subtraído.
-     * @return Resultado da subtração.
+     * @return Resultado da subtração vetorial.
      */
-    [[nodiscard]] Vector3 subtract( const Vector3 &v ) const {
-      return value - v.value;
-    }
+    [[nodiscard]] Vector3 subtract( const Vector3 &v ) const;
 
     /**
-     * @brief Multiplica o vetor por um escalar.
-     * @param scalar Escalar multiplicador.
+     * @brief Multiplica este vetor por um escalar.
+     * @param scalar Valor escalar.
      * @return Vetor escalado.
      */
-    [[nodiscard]] Vector3 multiply( float scalar ) const {
-      return value * scalar;
-    }
+    [[nodiscard]] Vector3 multiply( float scalar ) const;
 
     /**
-     * @brief Calcula a distância deste vetor para outro.
+     * @brief Calcula a distância euclidiana até outro vetor.
      * @param v Vetor de destino.
-     * @return Distância euclidiana entre os vetores.
+     * @return Distância entre os dois vetores.
      */
-    [[nodiscard]] float distanceTo( const Vector3 &v ) const {
-      return glm::length( value - v.value );
-    }
+    [[nodiscard]] float distanceTo( const Vector3 &v ) const;
 
     /**
      * @brief Produto vetorial entre este vetor e outro.
      * @param v Vetor a ser cruzado.
      * @return Vetor resultante do produto vetorial.
      */
-    [[nodiscard]] Vector3 cross( const Vector3 &v ) const {
-      return glm::cross( value, v.value );
-    }
+    [[nodiscard]] Vector3 cross( const Vector3 &v ) const;
 
     /**
      * @brief Produto escalar entre este vetor e outro.
      * @param v Vetor a ser multiplicado.
      * @return Resultado do produto escalar.
      */
-    [[nodiscard]] float dot( const Vector3 &v ) const {
-      return glm::dot( value, v.value );
-    }
-
-    /// Operador de soma vetorial.
-    Vector3 operator+( const Vector3 &v ) const {
-      return value + v.value;
-    }
-
-    /// Operador de subtração vetorial.
-    Vector3 operator-( const Vector3 &v ) const {
-      return value - v.value;
-    }
-
-    /// Operador de multiplicação por escalar.
-    Vector3 operator*( float scalar ) const {
-      return value * scalar;
-    }
-
-    /// Operador de produto escalar.
-    float operator*( const Vector3 &v ) const {
-      return glm::dot( value, v.value );
-    }
-
-    /// Operador de produto vetorial (sintaxe ^).
-    Vector3 operator^( const Vector3 &v ) const {
-      return glm::cross( value, v.value );
-    }
-
-    /// Operador de normalização (!v retorna vetor unitário).
-    Vector3 operator!() const {
-      return this->unit();
-    }
+    [[nodiscard]] float dot( const Vector3 &v ) const;
 
     /**
-     * @brief Acesso ao valor interno glm::vec3.
-     * @return Referência modificável ao vetor interno.
+     * @brief Operador de soma vetorial.
+     * @param v Vetor a ser somado.
+     * @return Resultado da soma vetorial.
      */
-    glm::vec3 &glm() {
-      return value;
-    }
+    Vector3 operator+( const Vector3 &v ) const;
 
     /**
-     * @brief Acesso constante ao valor interno glm::vec3.
-     * @return Referência constante ao vetor interno.
+     * @brief Operador de subtração vetorial.
+     * @param v Vetor a ser subtraído.
+     * @return Resultado da subtração vetorial.
      */
-    [[nodiscard]] const glm::vec3 &glm() const {
-      return value;
-    }
+    Vector3 operator-( const Vector3 &v ) const;
+
+    /**
+     * @brief Operador de multiplicação por escalar.
+     * @param scalar Valor escalar.
+     * @return Vetor resultante da multiplicação.
+     */
+    Vector3 operator*( float scalar ) const;
+
+    /**
+     * @brief Operador de produto escalar entre dois vetores.
+     * @param v Vetor a ser multiplicado.
+     * @return Produto escalar entre os vetores.
+     */
+    float operator*( const Vector3 &v ) const;
+
+    /**
+     * @brief Operador de produto vetorial.
+     * @param v Vetor a ser cruzado.
+     * @return Resultado do produto vetorial.
+     */
+    Vector3 operator^( const Vector3 &v ) const;
+
+    /**
+     * @brief Operador de normalização. Retorna um vetor unitário equivalente.
+     * @return Vetor unitário.
+     */
+    Vector3 operator!() const;
   };
-
 }  // namespace qxgl
 
 #endif  // QXGL_VECTOR3_HPP

@@ -48,11 +48,6 @@ namespace qxgl {
      */
     Vector3();
 
-    Vector3( const Vector3 & )            = default;
-    Vector3( Vector3 && )                 = delete;
-    Vector3 &operator=( const Vector3 & ) = default;
-    Vector3 &operator=( Vector3 && )      = delete;
-
     /**
      * @brief Construtor com valores iniciais.
      * @param x Valor da componente X.

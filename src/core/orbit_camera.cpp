@@ -8,10 +8,14 @@ namespace qxgl {
 
   OrbitCamera::OrbitCamera()
     : Camera(
-        Vector3( 0.0F, 1.0F, 10.0F ), Vector3( 0.0F, 1.0F, 0.0F ), Vector3( 0.0F, 1.0F, 0.0F ) ) {}
+        Vector3( 0.0F, 1.0F, 10.0F ), Vector3( 0.0F, 1.0F, 0.0F ), Vector3( 0.0F, 1.0F, 0.0F ) ) {
+    style = Orbit;
+  }
 
   OrbitCamera::OrbitCamera( const Vector3 &eye, const Vector3 &center, const Vector3 &up )
-    : Camera( eye, center, up ) {}
+    : Camera( eye, center, up ) {
+    style = Orbit;
+  }
 
   OrbitCamera::OrbitCamera( GLfloat ex,
                             GLfloat ey,

@@ -4,12 +4,12 @@ namespace qxgl {
 
   GameCamera::GameCamera() {
     center.z = eye.z - 1.0F;
-    style    = CameraStyle::GameCamera;
+    style    = CameraStyle::Game;
   }
 
   GameCamera::GameCamera( const Vector3 &eye, const Vector3 &center, const Vector3 &up )
     : Camera( eye, center, up ) {
-    style = CameraStyle::GameCamera;
+    style = CameraStyle::Game;
   }
 
   GameCamera::GameCamera( GLfloat ex,
@@ -22,7 +22,7 @@ namespace qxgl {
                           GLfloat uy,
                           GLfloat uz )
     : Camera( ex, ey, ez, cx, cy, cz, ux, uy, uz ) {
-    style = CameraStyle::GameCamera;
+    style = CameraStyle::Game;
   }
 
   void GameCamera::zoom( GLfloat delta, GLfloat scale ) {

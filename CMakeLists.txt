@@ -6,7 +6,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Diretórios de include
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/stb)
 
 # Encontrar pacotes necessários
 find_package(OpenGL REQUIRED)
@@ -38,6 +37,6 @@ install(TARGETS qxgl
 
 install(DIRECTORY src/
     DESTINATION include/qxgl
-    FILES_MATCHING PATTERN "*.hpp"
+    FILES_MATCHING PATTERN "*.h*"
 )
 

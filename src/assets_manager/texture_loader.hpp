@@ -2,7 +2,7 @@
 #define QXGL_TEXTURE_LOADER_HPP
 
 #define STB_IMAGE_IMPLEMENTATION
-#include "../../external/stb/stb_image.h"
+#include "stb_image.h"
 
 #include <GL/glut.h>
 #include <string>

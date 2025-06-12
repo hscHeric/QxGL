@@ -4,6 +4,9 @@
 #include <iostream>
 #include <string>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
 namespace qxgl {
 
   Texture::Texture() : textureID( 0 ), loaded( false ) {}

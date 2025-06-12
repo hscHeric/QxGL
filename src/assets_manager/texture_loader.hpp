@@ -1,9 +1,6 @@
 #ifndef QXGL_TEXTURE_LOADER_HPP
 #define QXGL_TEXTURE_LOADER_HPP
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
-
 #include <GL/glut.h>
 #include <string>
 

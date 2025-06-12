@@ -9,9 +9,7 @@ namespace qxgl {
   /**
    * @brief Estilo de controle da câmera.
    */
-  enum CameraStyle {
-    OrbitCamera = 1,
-  };
+  enum CameraStyle { OrbitCamera = 1, GameCamera = 2 };
 
   /**
    * @class Camera

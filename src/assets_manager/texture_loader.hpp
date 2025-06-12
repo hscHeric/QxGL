@@ -1,6 +1,9 @@
 #ifndef QXGL_TEXTURE_LOADER_HPP
 #define QXGL_TEXTURE_LOADER_HPP
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "../../external/stb/stb_image.h"
+
 #include <GL/glut.h>
 #include <string>
 
@@ -9,8 +12,8 @@ namespace qxgl {
   /// @brief Classe para gerenciamento de texturas OpenGL.
   ///
   /// Esta classe gerencia o carregamento, vinculação e liberação de texturas OpenGL.
-  /// Ela usa a biblioteca SOIL para carregar texturas e OpenGL para associá-las aos objetos.
-  /// A textura é identificada por um ID gerado pelo OpenGL.
+  /// Ela usa a biblioteca a biblioteca stb_image.h (header only) para carregar texturas e OpenGL
+  /// para associá-las aos objetos. A textura é identificada por um ID gerado pelo OpenGL.
 
   class Texture {
   private:

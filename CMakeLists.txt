@@ -6,12 +6,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Diretórios de include
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/stb)
 
 # Encontrar pacotes necessários
 find_package(OpenGL REQUIRED)
 
 # Localizar GLUT
 find_package(GLUT REQUIRED)
+
 
 # Coleta dos arquivos fonte
 file(GLOB_RECURSE QXGL_SOURCES CONFIGURE_DEPENDS

@@ -1,0 +1,4 @@
+#ifndef QXGL_MESH_LOADER_HPP
+#define QXGL_MESH_LOADER_HPP
+
+#endif  // !QXGL_MESH_LOADER_HPP

@@ -14,8 +14,8 @@
 
 // Câmera
 #include "camera.hpp"
+#include "distant_camera.hpp"
 #include "game_camera.hpp"
-#include "orbit_camera.hpp"
 
 // Renderização e Desenho
 #include "draw.hpp"

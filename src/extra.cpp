@@ -1,8 +1,8 @@
 #include "extra.hpp"
 
 #include "camera.hpp"
+#include "distant_camera.hpp"
 #include "game_camera.hpp"
-#include "orbit_camera.hpp"
 
 #include <iomanip>
 #include <iostream>
@@ -32,8 +32,8 @@ MouseLock glutGUI::mouse_lock = NOT_LOCKED;
 float     glutGUI::last_x     = 0.0;
 float     glutGUI::last_y     = 0.0;
 
-Camera *glutGUI::cam            = new CameraDistante();
-float   glutGUI::savedCamera[9] = { 5, 5, 20, 0, 0, 0, 0, 1, 0 };
+qxgl::Camera *glutGUI::cam            = new qxgl::DistantCamera();
+float         glutGUI::savedCamera[9] = { 5, 5, 20, 0, 0, 0, 0, 1, 0 };
 
 int   glutGUI::contRotation = 9999;
 float glutGUI::value        = 90;
@@ -130,8 +130,15 @@ void glutGUI::defaultDisplay() {
   // viewport unica
   glViewport( 0, 0, width, height );
   glLoadIdentity();
-  gluLookAt(
-    cam->e.x, cam->e.y, cam->e.z, cam->c.x, cam->c.y, cam->c.z, cam->u.x, cam->u.y, cam->u.z );
+  gluLookAt( cam->get_eye().x,
+             cam->get_eye().y,
+             cam->get_eye().z,
+             cam->get_center().x,
+             cam->get_center().y,
+             cam->get_center().z,
+             cam->get_up().x,
+             cam->get_up().y,
+             cam->get_up().z );
 
   // LIGHT0
   // habilita luz
@@ -219,94 +226,94 @@ void glutGUI::changeCam() {
     case 0:
       glutGUI::perspective  = true;
       glutGUI::pontosDeFuga = false;
-      cam                   = new CameraDistante();  // CameraDistante(0,1,10, 0,1,0, 0,1,0);
+      cam                   = new qxgl::DistantCamera();  // CameraDistante(0,1,10, 0,1,0, 0,1,0);
       break;
     case 1:
       glutGUI::perspective = false;
       glutGUI::ortho       = true;
-      cam                  = new CameraDistante( 0, 1, 5, 0, 1, 0, 0, 1, 0 );
+      cam                  = new qxgl::DistantCamera( 0, 1, 5, 0, 1, 0, 0, 1, 0 );
       break;
     case 2:
       glutGUI::perspective = false;
       glutGUI::ortho       = true;
-      cam                  = new CameraDistante( 5, 1, 0, 0, 1, 0, 0, 1, 0 );
+      cam                  = new qxgl::DistantCamera( 5, 1, 0, 0, 1, 0, 0, 1, 0 );
       // cam = new CameraDistante(5,0,0, 0,0,0, 0,1,-1);
       break;
     case 3:
       glutGUI::perspective = false;
       glutGUI::ortho       = true;
-      cam                  = new CameraDistante( 0, 1, -5, 0, 1, 0, 0, 1, 0 );
+      cam                  = new qxgl::DistantCamera( 0, 1, -5, 0, 1, 0, 0, 1, 0 );
       break;
     case 4:
       glutGUI::perspective = false;
       glutGUI::ortho       = true;
-      cam                  = new CameraDistante( -5, 1, 0, 0, 1, 0, 0, 1, 0 );
+      cam                  = new qxgl::DistantCamera( -5, 1, 0, 0, 1, 0, 0, 1, 0 );
       break;
     case 5:
       glutGUI::perspective = false;
       glutGUI::ortho       = true;
-      cam                  = new CameraDistante( 0, 6, 0, 0, 1, 0, 0, 0, -1 );
+      cam                  = new qxgl::DistantCamera( 0, 6, 0, 0, 1, 0, 0, 0, -1 );
       break;
     case 6:
       glutGUI::perspective = false;
       glutGUI::ortho       = true;
-      cam                  = new CameraDistante( 0, -4, 0, 0, 1, 0, 0, 0, 1 );
+      cam                  = new qxgl::DistantCamera( 0, -4, 0, 0, 1, 0, 0, 0, 1 );
       break;
     case 7:
       glutGUI::perspective = false;
       glutGUI::ortho       = true;
-      cam                  = new CameraDistante( 7, 7, 7, 0, 0, 0, 0, 1, 0 );
+      cam                  = new qxgl::DistantCamera( 7, 7, 7, 0, 0, 0, 0, 1, 0 );
       break;
     case 8:
       glutGUI::perspective = false;
       glutGUI::ortho       = true;
-      cam                  = new CameraDistante( 6, 3, 6, 0, 0, 0, 0, 1, 0 );
+      cam                  = new qxgl::DistantCamera( 6, 3, 6, 0, 0, 0, 0, 1, 0 );
       break;
     case 9:
       glutGUI::perspective = false;
       glutGUI::ortho       = true;
-      cam                  = new CameraDistante( 6, 2, 4, 0, 0, 0, 0, 1, 0 );
+      cam                  = new qxgl::DistantCamera( 6, 2, 4, 0, 0, 0, 0, 1, 0 );
       break;
     case 10:
       glutGUI::perspective = false;
       glutGUI::ortho       = false;
-      cam                  = new CameraDistante( -2, 3, 5, -2, 3, 0, 0, 1, 0 );
+      cam                  = new qxgl::DistantCamera( -2, 3, 5, -2, 3, 0, 0, 1, 0 );
       break;
     case 11:
       glutGUI::perspective  = true;
       glutGUI::pontosDeFuga = true;
-      cam                   = new CameraDistante( 0, 1, 1.5, 0, 1, 0, 0, 1, 0 );
+      cam                   = new qxgl::DistantCamera( 0, 1, 1.5, 0, 1, 0, 0, 1, 0 );
       break;
     case 12:
       glutGUI::perspective  = true;
       glutGUI::pontosDeFuga = true;
-      cam                   = new CameraDistante( 1.2, 0.5, 1.2, 0, 0.5, 0, 0, 1, 0 );
+      cam                   = new qxgl::DistantCamera( 1.2, 0.5, 1.2, 0, 0.5, 0, 0, 1, 0 );
       break;
     case 13:
       glutGUI::perspective  = true;
       glutGUI::pontosDeFuga = true;
-      cam                   = new CameraDistante( 0.5, 1.2, 1.2, 0.5, 0.5, 0, 0, 1, 0 );
+      cam                   = new qxgl::DistantCamera( 0.5, 1.2, 1.2, 0.5, 0.5, 0, 0, 1, 0 );
       break;
     case 14:
       glutGUI::perspective  = true;
       glutGUI::pontosDeFuga = true;
-      cam                   = new CameraDistante( 1.2, 0.2, 1.2, 0, 1, 0, 0, 1, 0 );
+      cam                   = new qxgl::DistantCamera( 1.2, 0.2, 1.2, 0, 1, 0, 0, 1, 0 );
       break;
     case 15:
       glutGUI::perspective  = true;
       glutGUI::pontosDeFuga = false;
-      cam                   = new CameraDistante( savedCamera[0],
-                                savedCamera[1],
-                                savedCamera[2],
-                                savedCamera[3],
-                                savedCamera[4],
-                                savedCamera[5],
-                                savedCamera[6],
-                                savedCamera[7],
-                                savedCamera[8] );
+      cam                   = new qxgl::DistantCamera( savedCamera[0],
+                                     savedCamera[1],
+                                     savedCamera[2],
+                                     savedCamera[3],
+                                     savedCamera[4],
+                                     savedCamera[5],
+                                     savedCamera[6],
+                                     savedCamera[7],
+                                     savedCamera[8] );
       break;
   }
-  orthof = 0.00025 * ( cam->c - cam->e ).magnitude();
+  orthof = 0.00025 * ( cam->get_center() - cam->get_eye() ).magnitude();
 }
 
 void glutGUI::defaultKey( unsigned char key, int x, int y ) {
@@ -341,19 +348,19 @@ void glutGUI::defaultKey( unsigned char key, int x, int y ) {
     case 'j':
       posCam = 1;
       delete cam;
-      cam = new CameraJogo();  // CameraDistante(0,1,5, 0,1,0, 0,1,0);
+      cam = new qxgl::GameCamera();  // CameraDistante(0,1,5, 0,1,0, 0,1,0);
       break;
     case 's':
       // save current camera location
-      savedCamera[0] = cam->e.x;
-      savedCamera[1] = cam->e.y;
-      savedCamera[2] = cam->e.z;
-      savedCamera[3] = cam->c.x;
-      savedCamera[4] = cam->c.y;
-      savedCamera[5] = cam->c.z;
-      savedCamera[6] = cam->u.x;
-      savedCamera[7] = cam->u.y;
-      savedCamera[8] = cam->u.z;
+      savedCamera[0] = cam->get_eye().x;
+      savedCamera[1] = cam->get_eye().y;
+      savedCamera[2] = cam->get_eye().z;
+      savedCamera[3] = cam->get_center().x;
+      savedCamera[4] = cam->get_center().y;
+      savedCamera[5] = cam->get_center().z;
+      savedCamera[6] = cam->get_up().x;
+      savedCamera[7] = cam->get_up().y;
+      savedCamera[8] = cam->get_up().z;
       break;
 
     case 'm': mouse_lock = MouseLock( ( int( mouse_lock ) + 1 ) % 3 ); break;
@@ -394,10 +401,12 @@ void glutGUI::defaultKey( unsigned char key, int x, int y ) {
 }
 
 void glutGUI::autoCamMove( float value, Axis axis, int nIterations ) {
-  if ( axis == AXIS_Z && value < 0 && cam->e.get_distance( cam->c ) <= 1.001 )
+  if ( axis == AXIS_Z && value < 0 && cam->get_eye().get_distance( cam->get_center() ) <= 1.001 ) {
     return;
-  if ( axis == AXIS_Y && fabs( cam->u.y ) <= 0.1 )
+  }
+  if ( axis == AXIS_Y && fabs( cam->get_up().y ) <= 0.1 ) {
     return;
+  }
 
   contRotation         = 0;
   glutGUI::value       = value;
@@ -409,19 +418,19 @@ void glutGUI::autoCamMotion( float value, Axis axis, int nIterations ) {
   switch ( axis ) {
     case AXIS_X:
       if ( contRotation < nIterations ) {
-        cam->rotatex( 0, ( HALF_PI / 90.0 ) * value / nIterations );
+        cam->rotate_x( 0, ( HALF_PI / 90.0 ) * value / nIterations );
         contRotation++;
       }
       break;
     case AXIS_Y:
       if ( contRotation < nIterations ) {
-        cam->rotatey( 0, ( HALF_PI / 90.0 ) * value / nIterations );
+        cam->rotate_y( 0, ( HALF_PI / 90.0 ) * value / nIterations );
         contRotation++;
       }
       break;
     case AXIS_Z:
       if ( contRotation < nIterations ) {
-        cam->zoom( 0, 20.0 * value / nIterations );
+        cam->zoom( 0, 20.0F * value / nIterations );
         contRotation++;
       }
       break;
@@ -609,8 +618,8 @@ void glutGUI::mouseMove( int x, int y ) {
   float fator = 10.0;
   if ( lbpressed && !rbpressed && !mbpressed ) {
     if ( !trans_obj && ( !trans_luz || !obj_transp ) ) {
-      cam->rotatex( y, last_y );
-      cam->rotatey( x, last_x );
+      cam->rotate_x( y, last_y );
+      cam->rotate_y( x, last_x );
     }
     if ( trans_obj ) {
       dly = dax = ( y - last_y ) / fator;
@@ -630,8 +639,8 @@ void glutGUI::mouseMove( int x, int y ) {
   fator = 100.0;
   if ( !lbpressed && rbpressed && !mbpressed ) {
     if ( !trans_obj && !trans_luz ) {
-      cam->translatex( x, last_x );
-      cam->translatey( y, last_y );
+      cam->translate_x( x, last_x );
+      cam->translate_y( y, last_y );
     }
     if ( trans_obj ) {
       drx = dtx = ( x - last_x ) / fator;
@@ -648,7 +657,7 @@ void glutGUI::mouseMove( int x, int y ) {
     if ( !trans_obj && !trans_luz ) {
       cam->zoom( y, last_y );
       // orthof += -(y - last_y)/50000.0;
-      orthof = 0.00025 * ( cam->c - cam->e ).magnitude();
+      orthof = 0.00025 * ( cam->get_center() - cam->get_eye() ).magnitude();
       // cam->rotatez(x,last_x);
     }
     if ( trans_obj ) {

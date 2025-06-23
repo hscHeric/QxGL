@@ -53,8 +53,8 @@ public:
   static float     last_x;      // = 0.0;
   static float     last_y;      // = 0.0;
 
-  static Camera *cam;  // = new CameraDistante();
-  static float   savedCamera[9];
+  static qxgl::Camera *cam;  // = new CameraDistante();
+  static float         savedCamera[9];
 
   static int   contRotation;  // = 9999;
   static float value;         // = 90;

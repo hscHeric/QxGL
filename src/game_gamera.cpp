@@ -1,93 +1,118 @@
 #include "game_camera.hpp"
 
-CameraJogo::CameraJogo() : Camera() {
-  c.z    = e.z - 1.0F;
-  estilo = CAMJOGO;
-}
+namespace qxgl {
 
-CameraJogo::CameraJogo( qxgl::Vetor3D e, qxgl::Vetor3D c, qxgl::Vetor3D u ) : Camera( e, c, u ) {
-  estilo = CAMJOGO;
-}
+  GameCamera::GameCamera() : Camera() {
+    style_    = CameraStyle::GAME;
+    center_.z = eye_.z - 1.0F;
+  }
 
-CameraJogo::CameraJogo( GLfloat ex,
-                        GLfloat ey,
-                        GLfloat ez,
-                        GLfloat cx,
-                        GLfloat cy,
-                        GLfloat cz,
-                        GLfloat ux,
-                        GLfloat uy,
-                        GLfloat uz )
-  : Camera( ex, ey, ez, cx, cy, cz, ux, uy, uz ) {
-  estilo = CAMJOGO;
-}
+  GameCamera::GameCamera( const Vetor3D &eye, const Vetor3D &center, const Vetor3D &up )
+    : Camera( eye, center, up ) {
+    style_ = CameraStyle::GAME;
+  }
 
-void CameraJogo::zoom( GLfloat win_y, GLfloat last_y ) {
-  const float DELTA        = ( win_y - last_y ) / 20.0F;
-  const auto  DIRECTION    = c - e;
-  const auto  DISPLACEMENT = DIRECTION * DELTA;
+  GameCamera::GameCamera( GLfloat ex,
+                          GLfloat ey,
+                          GLfloat ez,
+                          GLfloat cx,
+                          GLfloat cy,
+                          GLfloat cz,
+                          GLfloat ux,
+                          GLfloat uy,
+                          GLfloat uz )
+    : Camera( ex, ey, ez, cx, cy, cz, ux, uy, uz ) {
+    style_ = CameraStyle::GAME;
+  }
 
-  e -= DISPLACEMENT;
-  c -= DISPLACEMENT;
-}
+  void GameCamera::zoom( GLfloat win_y, GLfloat last_y ) {
+    const auto  VEC   = center_ - eye_;
+    const float DELTA = ( win_y - last_y ) / 20.0F;
 
-void CameraJogo::translatex( GLfloat win_x, GLfloat last_x ) {
-  const float DELTA           = ( last_x - win_x ) / 30.0F;
-  const auto  VIEW_DIRECTION  = c - e;
-  const auto  RIGHT_DIRECTION = VIEW_DIRECTION ^ u;  // Produto vetorial
-  const auto  DISPLACEMENT    = RIGHT_DIRECTION * DELTA;
+    eye_ -= VEC * DELTA;
+    center_ -= VEC * DELTA;
+  }
 
-  e -= DISPLACEMENT;
-  c -= DISPLACEMENT;
-}
+  void GameCamera::translate_x( GLfloat win_x, GLfloat last_x ) {
+    const auto  VEC   = center_ - eye_;
+    const auto  X_POS = VEC ^ up_;
+    const float DELTA = ( last_x - win_x ) / 30.0F;
 
-void CameraJogo::translatey( GLfloat win_y, GLfloat last_y ) {
-  const float DELTA        = ( last_y - win_y ) / 30.0F;
-  const auto  DISPLACEMENT = u * DELTA;
+    eye_ -= X_POS * DELTA;
+    center_ -= X_POS * DELTA;
+  }
 
-  e += DISPLACEMENT;
-  c += DISPLACEMENT;
-}
+  void GameCamera::translate_y( GLfloat win_y, GLfloat last_y ) {
+    const float DELTA = ( last_y - win_y ) / 30.0F;
 
-void CameraJogo::rotatex( GLfloat win_y, GLfloat last_y ) {
-  const float DELTA = ( last_y - win_y ) / 500.0F;
-  c += u * DELTA;
+    eye_ += up_ * DELTA;
+    center_ += up_ * DELTA;
+  }
 
-  const auto FORWARD_VEC = ( c - e ).get_unit();
-  c                      = e + FORWARD_VEC;
+  void GameCamera::rotate_x( GLfloat win_y, GLfloat last_y ) {
+    const float DELTA = ( last_y - win_y ) / 500.0F;
+    center_ += up_ * DELTA;
 
-  const auto RIGHT_VEC = FORWARD_VEC ^ u;
-  u                    = ( RIGHT_VEC ^ FORWARD_VEC ).get_unit();
-}
+    auto n = center_ - eye_;
+    n.normalize();
+    center_ = eye_ + n;
 
-void CameraJogo::rotatey( GLfloat win_x, GLfloat last_x ) {
-  const float DELTA           = ( last_x - win_x ) / 500.0F;
-  const auto  VIEW_DIRECTION  = c - e;
-  const auto  RIGHT_DIRECTION = VIEW_DIRECTION ^ u;
-  c -= RIGHT_DIRECTION * DELTA;
+    const auto X_POS = n ^ up_;
+    up_              = X_POS ^ n;
+    up_.normalize();
+  }
 
-  const auto FORWARD_VEC   = ( c - e ).get_unit();
-  c                        = e + FORWARD_VEC;
-  const auto WORLD_UP      = qxgl::Vetor3D( 0.0F, 1.0F, 0.0F );
-  const auto NEW_RIGHT_VEC = ( WORLD_UP ^ FORWARD_VEC ).get_unit();
-  u                        = ( FORWARD_VEC ^ NEW_RIGHT_VEC ).get_unit();
-}
+  void GameCamera::rotate_y( GLfloat win_x, GLfloat last_x ) {
+    const auto  VEC   = center_ - eye_;
+    const auto  X_POS = VEC ^ up_;
+    const float DELTA = ( last_x - win_x ) / 500.0F;
 
-void CameraJogo::rotatez( GLfloat win_x, GLfloat last_x ) {
-  const float DELTA = ( last_x - win_x ) / 300.0F;
+    center_ -= X_POS * DELTA;
 
-  const auto RIGHT_VEC = ( ( c - e ) ^ u ).get_unit();
+    auto n = center_ - eye_;
+    n.normalize();
+    center_ = eye_ + n;
 
-  u -= RIGHT_VEC * DELTA;
-  u.normalize();
-}
+    Vetor3D world_up;
+    if ( up_.y >= 0.0F ) {
+      world_up = Vetor3D( 0.0F, 1.0F, 0.0F );
+    } else {
+      world_up = Vetor3D( 0.0F, -1.0F, 0.0F );
+    }
 
-qxgl::Vetor3D CameraJogo::getPickedPoint( GLfloat x, GLfloat y ) {
-  const auto Z_AXIS = ( e - c ).get_unit();       // Vetor "para frente" da câmera
-  const auto X_AXIS = ( u ^ Z_AXIS ).get_unit();  // Vetor "para a direita" da câmera
-  const auto Y_AXIS = u;                          // O vetor 'up' da câmera já é o eixo Y local
+    const auto VCE   = eye_ - center_;
+    const auto NEW_X = world_up ^ VCE;
+    up_              = VCE ^ NEW_X;
+    up_.normalize();
+  }
 
-  const auto WORLD_OFFSET = ( X_AXIS * x ) + ( Y_AXIS * y ) - ( Z_AXIS * 1.0F );
+  void GameCamera::rotate_z( GLfloat win_x, GLfloat last_x ) {
+    const auto VEC   = center_ - eye_;
+    auto       x_pos = VEC ^ up_;
+    x_pos.normalize();
 
-  return e + WORLD_OFFSET;
-}
+    const float DELTA = ( last_x - win_x ) / 300.0F;
+
+    up_ -= x_pos * DELTA;
+    up_.normalize();
+  }
+
+  Vetor3D GameCamera::get_picked_point( GLfloat x, GLfloat y ) {
+    auto vce = eye_ - center_;
+    vce.normalize();
+
+    auto x_pos = up_ ^ vce;
+    x_pos.normalize();
+
+    float dx = ( x_pos.x * x ) + ( up_.x * y ) + ( vce.x * -1.0F );
+    float dy = ( x_pos.y * x ) + ( up_.y * y ) + ( vce.y * -1.0F );
+    float dz = ( x_pos.z * x ) + ( up_.z * y ) + ( vce.z * -1.0F );
+
+    dx += eye_.x;
+    dy += eye_.y;
+    dz += eye_.z;
+
+    return { dx, dy, dz };
+  }
+
+}  // namespace qxgl

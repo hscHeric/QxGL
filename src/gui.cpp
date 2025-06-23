@@ -266,15 +266,15 @@ void GUI::displayInit() {
   // viewport unica
   glViewport( 0, 0, glutGUI::width, glutGUI::height );
   glLoadIdentity();
-  gluLookAt( glutGUI::cam->e.x,
-             glutGUI::cam->e.y,
-             glutGUI::cam->e.z,
-             glutGUI::cam->c.x,
-             glutGUI::cam->c.y,
-             glutGUI::cam->c.z,
-             glutGUI::cam->u.x,
-             glutGUI::cam->u.y,
-             glutGUI::cam->u.z );
+  gluLookAt( glutGUI::cam->get_eye().x,
+             glutGUI::cam->get_eye().y,
+             glutGUI::cam->get_eye().z,
+             glutGUI::cam->get_center().x,
+             glutGUI::cam->get_center().y,
+             glutGUI::cam->get_center().z,
+             glutGUI::cam->get_up().x,
+             glutGUI::cam->get_up().y,
+             glutGUI::cam->get_up().z );
   // gluLookAt(0,10,20,  0,0,0,  0,1,0);
 
   // GUI::setLight(7,0,4,0,true,false,true);

@@ -5,6 +5,7 @@
 
 namespace qxgl {
   class Transform {
+  public:
     qxgl::Vetor3D position{ 0.0F, 0.0F, 0.0F };
     qxgl::Vetor3D rotation{ 0.0F, 0.0F, 0.0F };
     qxgl::Vetor3D scale{ 1.0F, 1.0F, 1.0F };

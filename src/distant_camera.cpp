@@ -2,7 +2,6 @@
 
 namespace qxgl {
 
-  // --- Construtores ---
   DistantCamera::DistantCamera() : Camera() {
     style_    = CameraStyle::DIST;
     center_.z = 0.0F;

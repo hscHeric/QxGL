@@ -1,34 +1,28 @@
-#ifndef OPENTEXTURES_H
-#define OPENTEXTURES_H
+#ifndef QXGL_TEXTURES_LOADER_HPP
+#define QXGL_TEXTURES_LOADER_HPP
 
 #include <GL/gl.h>
-#include <GL/glext.h>
-#include <GL/glu.h>
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-#include <fstream>
-#include <setjmp.h>
-#include <stdio.h>
+#include <string_view>
 
-// #include <windows.h>
-// #include "jpeglib.h"
+namespace qxgl::TextureLoader {
 
-#include <IL/il.h>
+  /**
+   * @brief Carrega uma textura de um arquivo de imagem (ex: PNG, JPG, TGA) usando DevIL.
+   * @details Esta é a função principal e recomendada para carregar texturas.
+   * @param filename O caminho para o arquivo de imagem.
+   * @param wrap Se verdadeiro, a textura usará GL_REPEAT; senão, usará GL_CLAMP.
+   */
+  void load( std::string_view filename, bool wrap = true );
 
-class OpenTextures {
-public:
-  OpenTextures() {};
-  ~OpenTextures() {};
+  /**
+   * @brief Carrega uma textura de um arquivo RAW (sem cabeçalho).
+   * @param filename O caminho para o arquivo RAW.
+   * @param wrap Se verdadeiro, a textura usará GL_REPEAT; senão, usará GL_CLAMP.
+   * @param width A largura da imagem (padrão 256).
+   * @param height A altura da imagem (padrão 256).
+   */
+  void load_raw( std::string_view filename, bool wrap = true, int width = 256, int height = 256 );
 
-  // Load an image using DevIL and return the devIL handle (-1 if failure)
-  static ILuint LoadImage( const char *filename );
-  static void   loadTexture( const char *filename, int wrap );
+}  // namespace qxgl::TextureLoader
 
-  static void loadTextureRAW( const char *filename, int wrap );
-  static void loadTextureBMP( const char *szFileName, int wrap );
-  static void read_JPEG_file( char *filename, int wrap );
-
-} typedef OT;
-
-#endif
+#endif  // !QXGL_TEXTURES_LOADER_HPP

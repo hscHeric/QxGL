@@ -1,6 +1,9 @@
 #include "gui.hpp"
 
 #include "draw.hpp"
+
+#include <IL/il.h>
+#include <iostream>
 //-----Texturas---------
 // texture
 #include "textures_loader.hpp"
@@ -18,68 +21,32 @@ enum { OBJECT = 0, EYE, SPHERE_MAP };
 
 int texture_mode = 0;
 
-// Texture ///////////////////////////////////////////////////////////
-// carrega inicialmente (apenas uma vez) as texturas dos arquivos
 void GUI::loadTextures() {
-  /* Initialization of DevIL */
   if ( ilGetInteger( IL_VERSION_NUM ) < IL_VERSION ) {
-    printf( "wrong DevIL version \n" );
+    std::cerr << "Erro: Versao incorreta da biblioteca DevIL instalada." << std::endl;
     return;
   }
   ilInit();
 
-  // Generate 10 texture object ID's
   glGenTextures( 10, tList );
 
-  glBindTexture( GL_TEXTURE_2D, tList[GRANITO] );
-  // carrega a imagem e seta parametros de mapeamento de textura
-  //  OT::loadTexture( "../textures/granito.jpg", true );
-  OT::loadTexture( "textures/granito.jpg", true );
+  auto bind_and_load = [&]( int texture_id, std::string_view path ) {
+    glBindTexture( GL_TEXTURE_2D, tList[texture_id] );
+    qxgl::TextureLoader::load( path, true );
+  };
 
-  glBindTexture( GL_TEXTURE_2D, tList[MARMORE] );
-  // carrega a imagem e seta parametros de mapeamento de textura
-  //  OT::loadTexture( "../textures/marmore.jpg", true );
-  OT::loadTexture( "textures/marmore.jpg", true );
-
-  glBindTexture( GL_TEXTURE_2D, tList[LADRILHO] );
-  // carrega a imagem e seta parametros de mapeamento de textura
-  //  OT::loadTexture( "../textures/ladrilho.jpg", true );
-  OT::loadTexture( "textures/ladrilho.jpg", true );
-
-  glBindTexture( GL_TEXTURE_2D, tList[REFRI] );
-  // carrega a imagem e seta parametros de mapeamento de textura
-  //  OT::loadTexture( "../textures/refri.jpg", true );
-  OT::loadTexture( "textures/refri.jpg", true );
-
-  glBindTexture( GL_TEXTURE_2D, tList[REFRITRANSP] );
-  // carrega a imagem e seta parametros de mapeamento de textura
-  //  OT::loadTexture( "../textures/refri.png", true );
-  OT::loadTexture( "textures/refri.png", true );
-
-  glBindTexture( GL_TEXTURE_2D, tList[SKY] );
-  // carrega a imagem e seta parametros de mapeamento de textura
-  //  OT::loadTexture( "../textures/sky.jpg", true );
-  OT::loadTexture( "textures/sky.jpg", true );
+  bind_and_load( GRANITO, "textures/granito.jpg" );
+  bind_and_load( MARMORE, "textures/marmore.jpg" );
+  bind_and_load( LADRILHO, "textures/ladrilho.jpg" );
+  bind_and_load( REFRI, "textures/refri.jpg" );
+  bind_and_load( REFRITRANSP, "textures/refri.png" );
+  bind_and_load( SKY, "textures/sky.jpg" );
+  bind_and_load( GRID, "textures/grid.jpg" );
+  bind_and_load( AZULEJO, "textures/azulejo.jpg" );
+  bind_and_load( CHECKERS, "textures/checkers.jpg" );
 
   glBindTexture( GL_TEXTURE_2D, tList[KICK_ASS] );
-  // carrega a imagem e seta parametros de mapeamento de textura
-  //  OT::loadTextureRAW( "../textures/kick_ass.raw", true );
-  OT::loadTextureRAW( "textures/kick_ass.raw", true );
-
-  glBindTexture( GL_TEXTURE_2D, tList[GRID] );
-  // carrega a imagem e seta parametros de mapeamento de textura
-  //  OT::loadTexture( "../textures/grid.jpg", true );
-  OT::loadTexture( "textures/grid.jpg", true );
-
-  glBindTexture( GL_TEXTURE_2D, tList[AZULEJO] );
-  // carrega a imagem e seta parametros de mapeamento de textura
-  //  OT::loadTexture( "../textures/azulejo.jpg", true );
-  OT::loadTexture( "textures/azulejo.jpg", true );
-
-  glBindTexture( GL_TEXTURE_2D, tList[CHECKERS] );
-  // carrega a imagem e seta parametros de mapeamento de textura
-  //  OT::loadTexture( "../textures/checkers.jpg", true );
-  OT::loadTexture( "textures/checkers.jpg", true );
+  qxgl::TextureLoader::load_raw( "textures/kick_ass.raw", true );
 }
 
 void GUI::habilitaTextura( bool renderTexture, bool texture_automatic, int texture_mode ) {

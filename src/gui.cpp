@@ -1183,7 +1183,7 @@ void GUI::drawPlane( qxgl::Vetor3D n,
 void GUI::drawOrigin( float tamanho ) {
   glPushMatrix();
   if ( glutGUI::draw_eixos )
-    Desenha::drawEixos( tamanho );
+    qxgl::Drawing::draw_axes( tamanho );
   glPopMatrix();
 }
 
@@ -1214,7 +1214,7 @@ void GUI::drawOriginAL( float tam, float discr ) {
   glPushMatrix();
   glRotated( 90, 0, 1, 0 );
   glTranslated( 0, 0, tam );
-  Desenha::gluClosedCylinder( quad, 0.1 * 0.5, 0, 0.2 * 0.5, 10, 10 );
+  qxgl::Drawing::draw_closed_cylinder( quad, 0.1 * 0.5, 0, 0.2 * 0.5, 10, 10 );
   glPopMatrix();
 
   // y
@@ -1235,7 +1235,7 @@ void GUI::drawOriginAL( float tam, float discr ) {
   glPushMatrix();
   glRotated( 90, -1, 0, 0 );
   glTranslated( 0, 0, tam );
-  Desenha::gluClosedCylinder( quad, 0.1 * 0.5, 0, 0.2 * 0.5, 10, 10 );
+  qxgl::Drawing::draw_closed_cylinder( quad, 0.1 * 0.5, 0, 0.2 * 0.5, 10, 10 );
   glPopMatrix();
 
   // z
@@ -1255,7 +1255,7 @@ void GUI::drawOriginAL( float tam, float discr ) {
   }
   glPushMatrix();
   glTranslated( 0, 0, tam );
-  Desenha::gluClosedCylinder( quad, 0.1 * 0.5, 0, 0.2 * 0.5, 10, 10 );
+  qxgl::Drawing::draw_closed_cylinder( quad, 0.1 * 0.5, 0, 0.2 * 0.5, 10, 10 );
   glPopMatrix();
 
   glLineWidth( 1 );
@@ -1267,9 +1267,9 @@ void GUI::drawCamera( float tamanho ) {
   GLUquadricObj *quad = gluNewQuadric();
 
   glPushMatrix();
-  Desenha::drawBox( -tamanho, -tamanho, -tamanho, tamanho, tamanho, tamanho );
+  qxgl::Drawing::draw_box( -tamanho, -tamanho, -tamanho, tamanho, tamanho, tamanho );
   glTranslatef( 0, 0, -2 * tamanho );
-  Desenha::gluClosedCylinder(
+  qxgl::Drawing::draw_closed_cylinder(
     quad, tamanho, tamanho / 2, tamanho, glutGUI::slices, glutGUI::stacks );
   glPopMatrix();
 

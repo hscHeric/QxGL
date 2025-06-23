@@ -6,7 +6,8 @@ CameraDistante::CameraDistante() : Camera() {
   estilo = CAMDIST;
 }
 
-CameraDistante::CameraDistante( Vetor3D e, Vetor3D c, Vetor3D u ) : Camera( e, c, u ) {
+CameraDistante::CameraDistante( qxgl::Vetor3D e, qxgl::Vetor3D c, qxgl::Vetor3D u )
+  : Camera( e, c, u ) {
   estilo = CAMDIST;
 }
 
@@ -24,36 +25,36 @@ CameraDistante::CameraDistante( GLfloat ex,
 }
 
 void CameraDistante::zoom( GLfloat new_y, GLfloat last_y ) {
-  Vetor3D Vec = c - e;  // -z_
-  !Vec;                 // normaliza (torna unitario)
+  qxgl::Vetor3D Vec = c - e;  // -z_
+  !Vec;                       // normaliza (torna unitario)
 
-  Vetor3D eNovo = e + ( Vec * ( ( new_y - last_y ) / 20.0 ) );
+  qxgl::Vetor3D eNovo = e + ( Vec * ( ( new_y - last_y ) / 20.0 ) );
   if ( ( c - eNovo ) * ( Vec ) >= 0.0001 ) {  // se e e eNovo estao do mesmo lado em relacao a c
     e = eNovo;
   }
 }
 
 void CameraDistante::translatex( GLfloat new_x, GLfloat last_x ) {
-  Vetor3D Vec = c - e;    // -z_
-  Vetor3D x_  = Vec ^ u;  // x_
-  !x_;                    // normaliza (torna unitario)
+  qxgl::Vetor3D Vec = c - e;    // -z_
+  qxgl::Vetor3D x_  = Vec ^ u;  // x_
+  !x_;                          // normaliza (torna unitario)
 
-  e = e + ( x_ * ( Vec.modulo() * ( last_x - new_x ) / 300.0 ) );
-  c = c + ( x_ * ( Vec.modulo() * ( last_x - new_x ) / 300.0 ) );
+  e = e + ( x_ * ( Vec.magnitude() * ( last_x - new_x ) / 300.0 ) );
+  c = c + ( x_ * ( Vec.magnitude() * ( last_x - new_x ) / 300.0 ) );
 }
 
 void CameraDistante::translatey( GLfloat new_y, GLfloat last_y ) {
-  Vetor3D Vec = c - e;  // -z_
+  qxgl::Vetor3D Vec = c - e;  // -z_
 
-  e = e - ( u * ( Vec.modulo() * ( last_y - new_y ) / 300.0 ) );
-  c = c - ( u * ( Vec.modulo() * ( last_y - new_y ) / 300.0 ) );
+  e = e - ( u * ( Vec.magnitude() * ( last_y - new_y ) / 300.0 ) );
+  c = c - ( u * ( Vec.magnitude() * ( last_y - new_y ) / 300.0 ) );
 }
 
 void CameraDistante::rotatex( GLfloat new_y, GLfloat last_y ) {
   // vetor do centro(center) ao olho(eye)
-  Vetor3D Vce = e - c;  // z_
+  qxgl::Vetor3D Vce = e - c;  // z_
   // distancia do centro(center) ao olho(eye)
-  GLfloat Dce = Vce.modulo();
+  GLfloat Dce = Vce.magnitude();
   // deslocando o olho verticalmente
   e = e + ( u * ( ( ( 1.0 / 30.0 ) * Dce ) * ( new_y - last_y ) / 5.0 ) );
   // mantendo distancia (raio/rotacao) consistente
@@ -65,25 +66,25 @@ void CameraDistante::rotatex( GLfloat new_y, GLfloat last_y ) {
 
   // mantendo u perpendicular a x_ e z_ (u = y_)
   // x local
-  Vetor3D x_ = u ^ Vce;  // x_ (neste caso, nao precisa usar x_ unitario)
-  u          = Vce ^ x_;
+  qxgl::Vetor3D x_ = u ^ Vce;  // x_ (neste caso, nao precisa usar x_ unitario)
+  u                = Vce ^ x_;
   !u;  // normaliza (torna unitario)
 }
 
 //---------------------------------------------------------------------------
 void CameraDistante::rotatey( GLfloat new_x, GLfloat last_x ) {
   // vetor do centro(center) ao olho(eye)
-  Vetor3D Vce = e - c;  // z_
+  qxgl::Vetor3D Vce = e - c;  // z_
   // distancia do centro(center) ao olho(eye)
-  GLfloat Dce = Vce.modulo();
+  GLfloat Dce = Vce.magnitude();
   // deslocando o olho horizontalmente
   // x local
-  Vetor3D x_ = u ^ Vce;  // x_
-  !x_;                   // normaliza (torna unitario)
+  qxgl::Vetor3D x_ = u ^ Vce;  // x_
+  !x_;                         // normaliza (torna unitario)
 
   // novo-----------------------------------
   // tratando o caso quando está olhando de cima
-  float fator = u * Vetor3D( 0, 1, 0 );
+  float fator = u * qxgl::Vetor3D( 0, 1, 0 );
   // fim_novo-------------------------------
 
   e = e + ( x_ * ( ( ( 1.0 / 30.0 ) * Dce * fator ) * ( last_x - new_x ) / 5.0 ) );
@@ -96,11 +97,11 @@ void CameraDistante::rotatey( GLfloat new_x, GLfloat last_x ) {
 
   // novo-----------------------------------
   // atualizacao de u correspondente a nao deixar rotacionar em torno de z_
-  Vetor3D up;
+  qxgl::Vetor3D up;
   if ( u.y >= 0.0 ) {
-    up = Vetor3D( 0.0, 1.0, 0.0 );
+    up = qxgl::Vetor3D( 0.0, 1.0, 0.0 );
   } else {
-    up = Vetor3D( 0.0, -1.0, 0.0 );
+    up = qxgl::Vetor3D( 0.0, -1.0, 0.0 );
   }
   // mantendo u perpendicular a x_ e z_ (u = y_)
   // x local atualizado
@@ -113,10 +114,10 @@ void CameraDistante::rotatey( GLfloat new_x, GLfloat last_x ) {
 //---------------------------------------------------------------------------
 void CameraDistante::rotatez( GLfloat new_x, GLfloat last_x ) {
   // vetor do olho(eye) ao centro(center)
-  Vetor3D Vec = c - e;  // -z_
+  qxgl::Vetor3D Vec = c - e;  // -z_
   // x local
-  Vetor3D x_ = Vec ^ u;  // x_
-  !x_;                   // normaliza (torna unitario)
+  qxgl::Vetor3D x_ = Vec ^ u;  // x_
+  !x_;                         // normaliza (torna unitario)
 
   // modificando o vetor up
   u = u + ( x_ * ( ( last_x - new_x ) / 300.0 ) );
@@ -125,14 +126,14 @@ void CameraDistante::rotatez( GLfloat new_x, GLfloat last_x ) {
 
 //---------------------------------------------------------------------------
 // passando o ponto local a camera (x,y,-1) para as coordenadas do mundo
-Vetor3D CameraDistante::getPickedPoint( GLfloat x, GLfloat y ) {
+qxgl::Vetor3D CameraDistante::getPickedPoint( GLfloat x, GLfloat y ) {
   // calculando a base da camera
   // vetor do centro(center) ao olho(eye) - Zpos
-  Vetor3D Vce = e.subtracao( c );
-  Vce.normaliza();
+  qxgl::Vetor3D Vce = e - ( c );
+  Vce.normalize();
   // vetor no sentido positivo da direcao x
-  Vetor3D Xpos = u.prodVetorial( Vce );
-  Xpos.normaliza();
+  qxgl::Vetor3D Xpos = u ^ ( Vce );
+  Xpos.normalize();
 
   // mudanca da base da camera para a base do mundo (canonica)
   float dx = ( Xpos.x * x ) + ( u.x * y ) + ( Vce.x * -1 );

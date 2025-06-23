@@ -138,11 +138,11 @@ public:
   static void defaultMouseButton( int button, int state, int x, int y );
   static void mouseMove( int x, int y );
 
-  static void    multGLMatrixByVector( float res[], float matriz[], float entr[] );
-  static void    showGLMatrixIn2D( float matriz[] );
-  static void    composite();
-  static void    showLocalAndGlobalCoords( float pl[] );
-  static Vetor3D transformedPoint( Vetor3D p, transformFunction transformGL );
+  static void          multGLMatrixByVector( float res[], float matriz[], float entr[] );
+  static void          showGLMatrixIn2D( float matriz[] );
+  static void          composite();
+  static void          showLocalAndGlobalCoords( float pl[] );
+  static qxgl::Vetor3D transformedPoint( qxgl::Vetor3D p, transformFunction transformGL );
 };
 
 #endif  // EXTRA_H

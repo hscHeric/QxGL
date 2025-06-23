@@ -2,10 +2,10 @@
 
 class Transform {
 public:
-  Vetor3D pos             = Vetor3D( 0.0, 0.0, 0.0 );
-  Vetor3D rot             = Vetor3D( 0.0, 0.0, 0.0 );
-  Vetor3D esc             = Vetor3D( 1.0, 1.0, 1.0 );
-  bool    showLocalOrigin = true;
+  qxgl::Vetor3D pos             = qxgl::Vetor3D( 0.0, 0.0, 0.0 );
+  qxgl::Vetor3D rot             = qxgl::Vetor3D( 0.0, 0.0, 0.0 );
+  qxgl::Vetor3D esc             = qxgl::Vetor3D( 1.0, 1.0, 1.0 );
+  bool          showLocalOrigin = true;
 
   void apply();
   void apply2D();

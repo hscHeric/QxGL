@@ -67,9 +67,10 @@ public:
   //---------------transformacoes---------------
 
   //-------------------camera-------------------
-  static void camera2global( Vetor3D olho, Vetor3D centro, Vetor3D up );
-  static void global2camera( Vetor3D olho, Vetor3D centro, Vetor3D up );
-  static void global2cameraAlternativa( Vetor3D olho, Vetor3D centro, Vetor3D up );
+  static void camera2global( qxgl::Vetor3D olho, qxgl::Vetor3D centro, qxgl::Vetor3D up );
+  static void global2camera( qxgl::Vetor3D olho, qxgl::Vetor3D centro, qxgl::Vetor3D up );
+  static void
+    global2cameraAlternativa( qxgl::Vetor3D olho, qxgl::Vetor3D centro, qxgl::Vetor3D up );
   //-------------------camera-------------------
 
   //-------------------sombra-------------------
@@ -158,14 +159,14 @@ public:
                            float   discrHeight = 0.5,
                            float   texWidth    = 15.0,
                            float   texHeight   = 15.0 );
-  static void drawPlane( Vetor3D n,
-                         GLfloat distMinPlanoOrigem,
-                         float   width       = 5.0,
-                         float   height      = 5.0,
-                         float   discrWidth  = 0.03,
-                         float   discrHeight = 0.03,
-                         float   texWidth    = 5.0,
-                         float   texHeight   = 5.0 );
+  static void drawPlane( qxgl::Vetor3D n,
+                         GLfloat       distMinPlanoOrigem,
+                         float         width       = 5.0,
+                         float         height      = 5.0,
+                         float         discrWidth  = 0.03,
+                         float         discrHeight = 0.03,
+                         float         texWidth    = 5.0,
+                         float         texHeight   = 5.0 );
   static void drawOrigin( float tamanho = 0.1 );
   static void drawOriginAL( float tam = 0.1, float discr = 0.5 );
   static void drawCamera( float tamanho = 0.5 );

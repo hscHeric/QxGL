@@ -1,9 +1,9 @@
 #include "camera.hpp"
 
 Camera::Camera() : estilo( 0 ) {
-  e = Vetor3D();
-  c = Vetor3D();
-  u = Vetor3D();
+  e = qxgl::Vetor3D();
+  c = qxgl::Vetor3D();
+  u = qxgl::Vetor3D();
 
   e.x = 0;
   e.y = 1;
@@ -17,10 +17,10 @@ Camera::Camera() : estilo( 0 ) {
   u.z = 0;
 }
 
-Camera::Camera( Vetor3D e, Vetor3D c, Vetor3D u ) : estilo( 0 ) {
-  this->e = Vetor3D();
-  this->c = Vetor3D();
-  this->u = Vetor3D();
+Camera::Camera( qxgl::Vetor3D e, qxgl::Vetor3D c, qxgl::Vetor3D u ) : estilo( 0 ) {
+  this->e = qxgl::Vetor3D();
+  this->c = qxgl::Vetor3D();
+  this->u = qxgl::Vetor3D();
 
   this->e.x = e.x;
   this->e.y = e.y;
@@ -45,9 +45,9 @@ Camera::Camera( GLfloat ex,
                 GLfloat uy,
                 GLfloat uz )
   : estilo( 0 ) {
-  e = Vetor3D();
-  c = Vetor3D();
-  u = Vetor3D();
+  e = qxgl::Vetor3D();
+  c = qxgl::Vetor3D();
+  u = qxgl::Vetor3D();
 
   e.x = ex;
   e.y = ey;
@@ -63,12 +63,9 @@ Camera::Camera( GLfloat ex,
 }
 
 void Camera::adaptavetorcdisttojogo() {
-  Vetor3D Vec = c.subtracao( e );
-  Vec.normaliza();
-  c = e.soma( Vec );
+  c = e + ( c - e ).get_unit();
 }
 
 void Camera::adaptavetorcjogotodist( GLfloat r ) {
-  Vetor3D Vec = c.subtracao( e );
-  c           = e.soma( Vec.multiplicacao( r ) );
+  c = e + ( c - e ).get_unit() * r;
 }

@@ -5,12 +5,11 @@
 
 #include <GL/gl.h>
 #include <GL/glu.h>
-#include <math.h>
 
 class CameraJogo : public Camera {
 public:
   CameraJogo();
-  CameraJogo( Vetor3D e, Vetor3D c, Vetor3D u );
+  CameraJogo( qxgl::Vetor3D e, qxgl::Vetor3D c, qxgl::Vetor3D u );
   CameraJogo( GLfloat ex,
               GLfloat ey,
               GLfloat ez,
@@ -23,13 +22,13 @@ public:
   ~CameraJogo() {};
 
   // vetor Vec e u sempre unitarios e perpendiculares
-  virtual void    zoom( GLfloat, GLfloat );
-  virtual void    translatex( GLfloat, GLfloat );
-  virtual void    translatey( GLfloat, GLfloat );
-  virtual void    rotatex( GLfloat, GLfloat );
-  virtual void    rotatey( GLfloat, GLfloat );
-  virtual void    rotatez( GLfloat, GLfloat );
-  virtual Vetor3D getPickedPoint( GLfloat, GLfloat );
+  virtual void          zoom( GLfloat, GLfloat );
+  virtual void          translatex( GLfloat, GLfloat );
+  virtual void          translatey( GLfloat, GLfloat );
+  virtual void          rotatex( GLfloat, GLfloat );
+  virtual void          rotatey( GLfloat, GLfloat );
+  virtual void          rotatez( GLfloat, GLfloat );
+  virtual qxgl::Vetor3D getPickedPoint( GLfloat, GLfloat );
 };
 
 #endif

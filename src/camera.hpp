@@ -12,14 +12,14 @@
 
 class Camera {
 public:
-  Vetor3D e;
-  Vetor3D c;
-  Vetor3D u;
+  qxgl::Vetor3D e;
+  qxgl::Vetor3D c;
+  qxgl::Vetor3D u;
 
   int estilo;
 
   Camera();
-  Camera( Vetor3D e, Vetor3D c, Vetor3D u );
+  Camera( qxgl::Vetor3D e, qxgl::Vetor3D c, qxgl::Vetor3D u );
   Camera( GLfloat ex,
           GLfloat ey,
           GLfloat ez,
@@ -31,15 +31,15 @@ public:
           GLfloat uz );
   ~Camera() {};
 
-  virtual void    zoom( GLfloat, GLfloat )           = 0;
-  virtual void    translatex( GLfloat, GLfloat )     = 0;
-  virtual void    translatey( GLfloat, GLfloat )     = 0;
-  virtual void    rotatex( GLfloat, GLfloat )        = 0;
-  virtual void    rotatey( GLfloat, GLfloat )        = 0;
-  virtual void    rotatez( GLfloat, GLfloat )        = 0;
-  virtual Vetor3D getPickedPoint( GLfloat, GLfloat ) = 0;
-  void            adaptavetorcdisttojogo();
-  void            adaptavetorcjogotodist( GLfloat r );
+  virtual void          zoom( GLfloat, GLfloat )           = 0;
+  virtual void          translatex( GLfloat, GLfloat )     = 0;
+  virtual void          translatey( GLfloat, GLfloat )     = 0;
+  virtual void          rotatex( GLfloat, GLfloat )        = 0;
+  virtual void          rotatey( GLfloat, GLfloat )        = 0;
+  virtual void          rotatez( GLfloat, GLfloat )        = 0;
+  virtual qxgl::Vetor3D getPickedPoint( GLfloat, GLfloat ) = 0;
+  void                  adaptavetorcdisttojogo();
+  void                  adaptavetorcjogotodist( GLfloat r );
 };
 
 #endif

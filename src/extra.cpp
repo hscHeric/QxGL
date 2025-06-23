@@ -137,14 +137,14 @@ void glutGUI::defaultDisplay() {
   // habilita luz
   glEnable( GL_LIGHT0 );
   // definindo intensidades de cor da luz
-  GLfloat light_ambient[]  = { 0.2f, 0.2f, 0.2f, 1.0f };
-  GLfloat light_diffuse[]  = { 0.7f, 0.7f, 0.7f, 1.0f };
-  GLfloat light_specular[] = { 0.7f, 0.7f, 0.7f, 1.0f };
+  GLfloat light_ambient[]  = { 0.2f, 0.2f, 0.2f, 1.0F };
+  GLfloat light_diffuse[]  = { 0.7f, 0.7f, 0.7f, 1.0F };
+  GLfloat light_specular[] = { 0.7f, 0.7f, 0.7f, 1.0F };
   glLightfv( GL_LIGHT0, GL_AMBIENT, light_ambient );
   glLightfv( GL_LIGHT0, GL_DIFFUSE, light_diffuse );
   glLightfv( GL_LIGHT0, GL_SPECULAR, light_specular );
   // posicionando a luz
-  GLfloat light_position[] = { 0.0f, 1.0f, 0.0f, 1.0f };
+  GLfloat light_position[] = { 0.0F, 1.0F, 0.0F, 1.0F };
   glLightfv( GL_LIGHT0, GL_POSITION, light_position );
   // desenha uma esfera representando a luz
   glDisable( GL_LIGHTING );
@@ -164,7 +164,7 @@ void glutGUI::defaultDisplay() {
   GLfloat mat_ambient[]    = { 0.4, 0.2, 0.1, 1.0 };
   GLfloat mat_diffuse[]    = { 0.8, 0.4, 0.1, 1.0 };
   GLfloat mat_specular[]   = { 1.0, 1.0, 1.0, 1.0 };
-  GLfloat high_shininess[] = { 100.0f };
+  GLfloat high_shininess[] = { 100.0F };
 
   glMaterialfv( GL_FRONT, GL_AMBIENT, mat_ambient );
   glMaterialfv( GL_FRONT, GL_DIFFUSE, mat_diffuse );
@@ -306,7 +306,7 @@ void glutGUI::changeCam() {
                                 savedCamera[8] );
       break;
   }
-  orthof = 0.00025 * ( cam->c - cam->e ).modulo();
+  orthof = 0.00025 * ( cam->c - cam->e ).magnitude();
 }
 
 void glutGUI::defaultKey( unsigned char key, int x, int y ) {
@@ -394,7 +394,7 @@ void glutGUI::defaultKey( unsigned char key, int x, int y ) {
 }
 
 void glutGUI::autoCamMove( float value, Axis axis, int nIterations ) {
-  if ( axis == AXIS_Z && value < 0 && cam->e.getDistance( cam->c ) <= 1.001 )
+  if ( axis == AXIS_Z && value < 0 && cam->e.get_distance( cam->c ) <= 1.001 )
     return;
   if ( axis == AXIS_Y && fabs( cam->u.y ) <= 0.1 )
     return;
@@ -648,7 +648,7 @@ void glutGUI::mouseMove( int x, int y ) {
     if ( !trans_obj && !trans_luz ) {
       cam->zoom( y, last_y );
       // orthof += -(y - last_y)/50000.0;
-      orthof = 0.00025 * ( cam->c - cam->e ).modulo();
+      orthof = 0.00025 * ( cam->c - cam->e ).magnitude();
       // cam->rotatez(x,last_x);
     }
     if ( trans_obj ) {
@@ -748,7 +748,7 @@ void glutGUI::showLocalAndGlobalCoords( float pl[4] ) {
   glPopMatrix();
 }
 
-Vetor3D glutGUI::transformedPoint( Vetor3D p, transformFunction transformGL ) {
+qxgl::Vetor3D glutGUI::transformedPoint( qxgl::Vetor3D p, transformFunction transformGL ) {
   glMatrixMode( GL_MODELVIEW );
   glPushMatrix();
   glLoadIdentity();
@@ -767,6 +767,6 @@ Vetor3D glutGUI::transformedPoint( Vetor3D p, transformFunction transformGL ) {
 
   glutGUI::multGLMatrixByVector( res, matrix, pos );
 
-  Vetor3D res3D = Vetor3D( res[0], res[1], res[2] );
+  qxgl::Vetor3D res3D = qxgl::Vetor3D( res[0], res[1], res[2] );
   return res3D;
 }

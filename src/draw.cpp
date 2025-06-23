@@ -6,73 +6,73 @@ void Desenha::drawBox(
   GLfloat xmin, GLfloat ymin, GLfloat zmin, GLfloat xmax, GLfloat ymax, GLfloat zmax ) {
   glBegin( GL_QUADS );
   glNormal3f( 0., 0., -1. );
-  glTexCoord2f( 0.0f, 0.0f );
+  glTexCoord2f( 0.0F, 0.0F );
   glVertex3f( xmin, ymin, zmin );
-  glTexCoord2f( 1.0f, 0.0f );
+  glTexCoord2f( 1.0F, 0.0F );
   glVertex3f( xmin, ymax, zmin );
-  glTexCoord2f( 1.0f, 1.0f );
+  glTexCoord2f( 1.0F, 1.0F );
   glVertex3f( xmax, ymax, zmin );
-  glTexCoord2f( 0.0f, 1.0f );
+  glTexCoord2f( 0.0F, 1.0F );
   glVertex3f( xmax, ymin, zmin );
   glEnd();
 
   glBegin( GL_QUADS );
   glNormal3f( 1., 0., 0. );
-  glTexCoord2f( 0.0f, 0.0f );
+  glTexCoord2f( 0.0F, 0.0F );
   glVertex3f( xmax, ymin, zmin );
-  glTexCoord2f( 1.0f, 0.0f );
+  glTexCoord2f( 1.0F, 0.0F );
   glVertex3f( xmax, ymax, zmin );
-  glTexCoord2f( 1.0f, 1.0f );
+  glTexCoord2f( 1.0F, 1.0F );
   glVertex3f( xmax, ymax, zmax );
-  glTexCoord2f( 0.0f, 1.0f );
+  glTexCoord2f( 0.0F, 1.0F );
   glVertex3f( xmax, ymin, zmax );
   glEnd();
 
   glBegin( GL_QUADS );
   glNormal3f( 0., 0., 1. );
-  glTexCoord2f( 0.0f, 0.0f );
+  glTexCoord2f( 0.0F, 0.0F );
   glVertex3f( xmax, ymin, zmax );
-  glTexCoord2f( 1.0f, 0.0f );
+  glTexCoord2f( 1.0F, 0.0F );
   glVertex3f( xmax, ymax, zmax );
-  glTexCoord2f( 1.0f, 1.0f );
+  glTexCoord2f( 1.0F, 1.0F );
   glVertex3f( xmin, ymax, zmax );
-  glTexCoord2f( 0.0f, 1.0f );
+  glTexCoord2f( 0.0F, 1.0F );
   glVertex3f( xmin, ymin, zmax );
   glEnd();
 
   glBegin( GL_QUADS );
   glNormal3f( -1., 0., 0. );
-  glTexCoord2f( 0.0f, 0.0f );
+  glTexCoord2f( 0.0F, 0.0F );
   glVertex3f( xmin, ymin, zmax );
-  glTexCoord2f( 1.0f, 0.0f );
+  glTexCoord2f( 1.0F, 0.0F );
   glVertex3f( xmin, ymax, zmax );
-  glTexCoord2f( 1.0f, 1.0f );
+  glTexCoord2f( 1.0F, 1.0F );
   glVertex3f( xmin, ymax, zmin );
-  glTexCoord2f( 0.0f, 1.0f );
+  glTexCoord2f( 0.0F, 1.0F );
   glVertex3f( xmin, ymin, zmin );
   glEnd();
 
   glBegin( GL_QUADS );
   glNormal3f( 0., 1., 0. );
-  glTexCoord2f( 0.0f, 0.0f );
+  glTexCoord2f( 0.0F, 0.0F );
   glVertex3f( xmin, ymax, zmin );
-  glTexCoord2f( 1.0f, 0.0f );
+  glTexCoord2f( 1.0F, 0.0F );
   glVertex3f( xmin, ymax, zmax );
-  glTexCoord2f( 1.0f, 1.0f );
+  glTexCoord2f( 1.0F, 1.0F );
   glVertex3f( xmax, ymax, zmax );
-  glTexCoord2f( 0.0f, 1.0f );
+  glTexCoord2f( 0.0F, 1.0F );
   glVertex3f( xmax, ymax, zmin );
   glEnd();
 
   glBegin( GL_QUADS );
   glNormal3f( 0., -1., 0. );
-  glTexCoord2f( 0.0f, 0.0f );
+  glTexCoord2f( 0.0F, 0.0F );
   glVertex3f( xmax, ymin, zmin );
-  glTexCoord2f( 1.0f, 0.0f );
+  glTexCoord2f( 1.0F, 0.0F );
   glVertex3f( xmax, ymin, zmax );
-  glTexCoord2f( 1.0f, 1.0f );
+  glTexCoord2f( 1.0F, 1.0F );
   glVertex3f( xmin, ymin, zmax );
-  glTexCoord2f( 0.0f, 1.0f );
+  glTexCoord2f( 0.0F, 1.0F );
   glVertex3f( xmin, ymin, zmin );
   glEnd();
 }
@@ -327,7 +327,7 @@ void Desenha::drawEixos( GLfloat tam ) {
 //*/
 //---------------------------------------------------------------------------
 // aplica T.R.v
-void Desenha::setTransformODE( const dReal *pos, const dReal *R ) {
+void Desenha::setTransformODE( const float *pos, const float *R ) {
   GLfloat matrix[16];
   matrix[0]  = R[0];
   matrix[1]  = R[4];

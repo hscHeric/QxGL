@@ -92,7 +92,7 @@ void GUI::habilitaTextura( bool renderTexture, bool texture_automatic, int textu
       glEnable( GL_TEXTURE_GEN_T );
       // glEnable(GL_TEXTURE_GEN_R);
       // glEnable(GL_TEXTURE_GEN_Q);
-      // GLfloat zPlane[] = { 0.0f, 0.0f, 1.0f, 0.0f };
+      // GLfloat zPlane[] = { 0.0F, 0.0F, 1.0F, 0.0F };
       if ( texture_mode == OBJECT ) {
         glTexGeni( GL_S, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR );
         glTexGeni( GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR );
@@ -268,17 +268,17 @@ void GUI::displayInit() {
       glOrtho( -s, s, -s * h / w, s * h / w, nearPlane, 20 );
       glTranslatef( 0.0, 0.0, -nearPlane );  // translada -near em z de volta
       // matriz de cisalhamento (projecao obliqua)
-      float alfa          = 75;                   // 60; //30 //90
-      alfa                = alfa * ( PI / 180 );  // grau2rad
-      float phi           = -75;                  //-60; //-30 //-90
-      phi                 = phi * ( PI / 180 );   // grau2rad
+      float alfa          = 75;                                    // 60; //30 //90
+      alfa                = alfa * ( qxgl::constants::PI / 180 );  // grau2rad
+      float phi           = -75;                                   //-60; //-30 //-90
+      phi                 = phi * ( qxgl::constants::PI / 180 );   // grau2rad
       float transform[16] = { 1.0,
                               0.0,
-                              1.0f / tan( alfa ),
+                              1.0F / tan( alfa ),
                               0.0,
                               0.0,
                               1.0,
-                              1.0f / tan( phi ),
+                              1.0F / tan( phi ),
                               0.0,
                               0.0,
                               0.0,
@@ -347,9 +347,9 @@ void GUI::setLight( int   id,
   else
     glDisable( GL_LIGHT0 + id );
   // definindo intensidades de cor da luz
-  GLfloat light_ambient[]  = { 0.2f, 0.2f, 0.2f, 1.0f };
-  GLfloat light_diffuse[]  = { 0.7f, 0.7f, 0.7f, 1.0f };
-  GLfloat light_specular[] = { 0.7f, 0.7f, 0.7f, 1.0f };
+  GLfloat light_ambient[]  = { 0.2f, 0.2f, 0.2f, 1.0F };
+  GLfloat light_diffuse[]  = { 0.7f, 0.7f, 0.7f, 1.0F };
+  GLfloat light_specular[] = { 0.7f, 0.7f, 0.7f, 1.0F };
   if ( low ) {
     light_ambient[0] = light_ambient[1] = light_ambient[2] = 0.02f;
     light_diffuse[0] = light_diffuse[1] = light_diffuse[2] = 0.4f;
@@ -360,10 +360,10 @@ void GUI::setLight( int   id,
   glLightfv( GL_LIGHT0 + id, GL_SPECULAR, light_specular );
   // posicionando a luz
   GLfloat light_position[] = {
-    posx + glutGUI::lx, posy + glutGUI::ly, posz + glutGUI::lz, 1.0f
+    posx + glutGUI::lx, posy + glutGUI::ly, posz + glutGUI::lz, 1.0F
   };  // 4o parametro: 0.0 - luz no infinito, 1.0 - luz pontual
   if ( !glutGUI::pontual_light[id] )
-    light_position[3] = 0.0f;
+    light_position[3] = 0.0F;
   glLightfv( GL_LIGHT0 + id, GL_POSITION, light_position );
   // desenha uma esfera representando a luz
   if ( glutGUI::iluminacao && glutGUI::enabled_light[id] && !glutGUI::hidden_light[id] ) {
@@ -388,8 +388,8 @@ void GUI::setLight( int   id,
   // spot_light
   if ( glutGUI::spot_light[id] ) {
     const GLfloat light_direction[] = {
-      0.0f, 0.0f, -1.0f, 1.0f
-    };  //{ -(2.0f + lx), -(5.0f + ly), -(5.0f + lz), 1.0f };
+      0.0F, 0.0F, -1.0F, 1.0F
+    };  //{ -(2.0F + lx), -(5.0F + ly), -(5.0F + lz), 1.0F };
     glLightfv( GL_LIGHT0 + id, GL_SPOT_DIRECTION, light_direction );
     glLightf( GL_LIGHT0 + id, GL_SPOT_CUTOFF, glutGUI::spot_angle );
   } else {
@@ -410,10 +410,10 @@ void GUI::setLight( int   id,
 void GUI::setColor( float r, float g, float b, float a, bool specular ) {
   GLfloat mat_ambient[]  = { 0.6f * r, 0.6f * g, 0.6f * b, a };
   GLfloat mat_diffuse[]  = { r, g, b, a };
-  GLfloat mat_specular[] = { 0.0f, 0.0f, 0.0f, a };
+  GLfloat mat_specular[] = { 0.0F, 0.0F, 0.0F, a };
   if ( specular )
-    mat_specular[0] = mat_specular[1] = mat_specular[2] = 1.0f;  // 0.5f;
-  GLfloat high_shininess[] = { 100.0f };
+    mat_specular[0] = mat_specular[1] = mat_specular[2] = 1.0F;  // 0.5f;
+  GLfloat high_shininess[] = { 100.0F };
 
   glMaterialfv( GL_FRONT, GL_AMBIENT, mat_ambient );
   glMaterialfv( GL_FRONT, GL_DIFFUSE, mat_diffuse );
@@ -501,14 +501,14 @@ void GUI::glReflectPlaneXYf() {
 //---------------transformacoes---------------
 
 //-------------------camera-------------------
-void GUI::camera2global( Vetor3D olho, Vetor3D centro, Vetor3D up ) {
-  Vetor3D Oc = olho;           // origem do sist local da camera
-  Vetor3D kc = olho - centro;  // z local da camera
-  !kc;                         // normaliza kc (torna unitario)
-  Vetor3D ic = up ^ kc;        // x local da camera
-  !ic;                         // normaliza ic (torna unitario)
-  Vetor3D jc = kc ^ ic;        // j local da camera
-  !jc;                         // normaliza jc (torna unitario)
+void GUI::camera2global( qxgl::Vetor3D olho, qxgl::Vetor3D centro, qxgl::Vetor3D up ) {
+  qxgl::Vetor3D Oc = olho;           // origem do sist local da camera
+  qxgl::Vetor3D kc = olho - centro;  // z local da camera
+  !kc;                               // normaliza kc (torna unitario)
+  qxgl::Vetor3D ic = up ^ kc;        // x local da camera
+  !ic;                               // normaliza ic (torna unitario)
+  qxgl::Vetor3D jc = kc ^ ic;        // j local da camera
+  !jc;                               // normaliza jc (torna unitario)
 
   float Tcam[16] = { ic.x, jc.x, kc.x, Oc.x, ic.y, jc.y, kc.y, Oc.y,
                      ic.z, jc.z, kc.z, Oc.z, 0,    0,    0,    1 };
@@ -516,14 +516,14 @@ void GUI::camera2global( Vetor3D olho, Vetor3D centro, Vetor3D up ) {
   glMultTransposeMatrixf( Tcam );
 }
 
-void GUI::global2camera( Vetor3D olho, Vetor3D centro, Vetor3D up ) {
-  Vetor3D Oc = olho;           // origem do sist local da camera
-  Vetor3D kc = olho - centro;  // z local da camera
-  !kc;                         // normaliza kc (torna unitario)
-  Vetor3D ic = up ^ kc;        // x local da camera
-  !ic;                         // normaliza ic (torna unitario)
-  Vetor3D jc = kc ^ ic;        // j local da camera
-  !jc;                         // normaliza jc (torna unitario)
+void GUI::global2camera( qxgl::Vetor3D olho, qxgl::Vetor3D centro, qxgl::Vetor3D up ) {
+  qxgl::Vetor3D Oc = olho;           // origem do sist local da camera
+  qxgl::Vetor3D kc = olho - centro;  // z local da camera
+  !kc;                               // normaliza kc (torna unitario)
+  qxgl::Vetor3D ic = up ^ kc;        // x local da camera
+  !ic;                               // normaliza ic (torna unitario)
+  qxgl::Vetor3D jc = kc ^ ic;        // j local da camera
+  !jc;                               // normaliza jc (torna unitario)
 
   float Tcam[16] = { ic.x, ic.y, ic.z, ic * ( Oc * -1 ),  // t = R^T.-Oc = [ ic ]
                      jc.x, jc.y, jc.z, jc * ( Oc * -1 ),  //              [ jc ].-Oc
@@ -533,14 +533,14 @@ void GUI::global2camera( Vetor3D olho, Vetor3D centro, Vetor3D up ) {
   glMultTransposeMatrixf( Tcam );
 }
 
-void GUI::global2cameraAlternativa( Vetor3D olho, Vetor3D centro, Vetor3D up ) {
-  Vetor3D Oc = olho;           // origem do sist local da camera
-  Vetor3D kc = olho - centro;  // z local da camera
-  !kc;                         // normaliza kc (torna unitario)
-  Vetor3D ic = up ^ kc;        // x local da camera
-  !ic;                         // normaliza ic (torna unitario)
-  Vetor3D jc = kc ^ ic;        // j local da camera
-  !jc;                         // normaliza jc (torna unitario)
+void GUI::global2cameraAlternativa( qxgl::Vetor3D olho, qxgl::Vetor3D centro, qxgl::Vetor3D up ) {
+  qxgl::Vetor3D Oc = olho;           // origem do sist local da camera
+  qxgl::Vetor3D kc = olho - centro;  // z local da camera
+  !kc;                               // normaliza kc (torna unitario)
+  qxgl::Vetor3D ic = up ^ kc;        // x local da camera
+  !ic;                               // normaliza ic (torna unitario)
+  qxgl::Vetor3D jc = kc ^ ic;        // j local da camera
+  !jc;                               // normaliza jc (torna unitario)
 
   float Tcam[16] = { ic.x, ic.y, ic.z, 0, jc.x, jc.y, jc.z, 0, kc.x, kc.y, kc.z, 0, 0, 0, 0, 1 };
 
@@ -576,9 +576,11 @@ void GUI::shadowMatrixYk( GLfloat shadowMat[4][4], GLfloat lightpos[4], GLfloat 
   shadowMat[3][2] = 0.0;
   shadowMat[3][3] = -lightpos[Y];
 
-  for ( int i = 0; i < 4; i++ )
-    for ( int j = 0; j < 4; j++ )
+  for ( int i = 0; i < 4; i++ ) {
+    for ( int j = 0; j < 4; j++ ) {
       shadowMat[i][j] *= -1;
+    }
+  }
 }
 
 // Create a matrix that will project the desired shadow
@@ -593,23 +595,23 @@ void GUI::shadowMatrix( GLfloat shadowMat[4][4], GLfloat groundplane[4], GLfloat
         groundplane[W] * lightpos[W];
 
   shadowMat[0][0] = dot - lightpos[X] * groundplane[X];
-  shadowMat[0][1] = 0.f - lightpos[X] * groundplane[Y];
-  shadowMat[0][2] = 0.f - lightpos[X] * groundplane[Z];
-  shadowMat[0][3] = 0.f - lightpos[X] * groundplane[W];
+  shadowMat[0][1] = 0.F - lightpos[X] * groundplane[Y];
+  shadowMat[0][2] = 0.F - lightpos[X] * groundplane[Z];
+  shadowMat[0][3] = 0.F - lightpos[X] * groundplane[W];
 
-  shadowMat[1][0] = 0.f - lightpos[Y] * groundplane[X];
+  shadowMat[1][0] = 0.F - lightpos[Y] * groundplane[X];
   shadowMat[1][1] = dot - lightpos[Y] * groundplane[Y];
-  shadowMat[1][2] = 0.f - lightpos[Y] * groundplane[Z];
-  shadowMat[1][3] = 0.f - lightpos[Y] * groundplane[W];
+  shadowMat[1][2] = 0.F - lightpos[Y] * groundplane[Z];
+  shadowMat[1][3] = 0.F - lightpos[Y] * groundplane[W];
 
-  shadowMat[2][0] = 0.f - lightpos[Z] * groundplane[X];
-  shadowMat[2][1] = 0.f - lightpos[Z] * groundplane[Y];
+  shadowMat[2][0] = 0.F - lightpos[Z] * groundplane[X];
+  shadowMat[2][1] = 0.F - lightpos[Z] * groundplane[Y];
   shadowMat[2][2] = dot - lightpos[Z] * groundplane[Z];
-  shadowMat[2][3] = 0.f - lightpos[Z] * groundplane[W];
+  shadowMat[2][3] = 0.F - lightpos[Z] * groundplane[W];
 
-  shadowMat[3][0] = 0.f - lightpos[W] * groundplane[X];
-  shadowMat[3][1] = 0.f - lightpos[W] * groundplane[Y];
-  shadowMat[3][2] = 0.f - lightpos[W] * groundplane[Z];
+  shadowMat[3][0] = 0.F - lightpos[W] * groundplane[X];
+  shadowMat[3][1] = 0.F - lightpos[W] * groundplane[Y];
+  shadowMat[3][2] = 0.F - lightpos[W] * groundplane[Z];
   shadowMat[3][3] = dot - lightpos[W] * groundplane[W];
 }
 
@@ -627,7 +629,7 @@ int GUI::processHits( GLint hits, GLuint buffer[] ) {
   int    i;
   GLuint names, *ptr, minZ, *ptrNames, numberOfNames;
 
-  ptrNames = NULL;
+  ptrNames = nullptr;
 
   printf( "Hits = %d\n", hits );
   printf( "Buffer = " );
@@ -659,10 +661,11 @@ int GUI::processHits( GLint hits, GLuint buffer[] ) {
   //    printf ("%d ", *ptr);
   // }
 
-  if ( ptrNames == NULL )
+  if ( ptrNames == nullptr ) {
     return 0;
-  else
+  } else {
     return *ptrNames;
+  }
 }
 
 void GUI::pickingInit(
@@ -710,9 +713,8 @@ int GUI::pickingClosestName( GLuint *selectBuf, int BUFSIZE ) {
   // if there are hits process them
   if ( hits != 0 ) {
     return GUI::processHits( hits, selectBuf );
-  } else {
-    return 0;
   }
+  return 0;
 }
 
 //-------------------picking------------------
@@ -828,8 +830,9 @@ void GUI::drawQuad( float width,
   for ( float i = -0.5 * ( width / discrWidth ); i < 0.5 * ( width / discrWidth ); i++ ) {
     for ( float j = -0.5 * ( height / discrHeight ); j < 0.5 * ( height / discrHeight ); j++ ) {
       glPushMatrix();
-      if ( inverted )
+      if ( inverted ) {
         glRotatef( 180, 1, 0, 0 );
+      }
       glTranslatef( i * discrWidth, 0.0, j * discrHeight );
       glBegin( GL_QUADS );
       glNormal3f( 0., 1., 0. );
@@ -838,12 +841,14 @@ void GUI::drawQuad( float width,
       // glVertex3f(+discrWidth,0.0,+discrHeight); glTexCoord2f( (i+1)*discrTexWidth,
       // j*discrTexHeight); glVertex3f(+discrWidth,0.0,         0.0); glTexCoord2f( i*discrTexWidth,
       // j*discrTexHeight); glVertex3f(        0.0,0.0,         0.0);
-      glTexCoord2f( 0.5 + i * discrTexWidth / width, 0.5 - ( j + 1 ) * discrTexHeight / height );
+      glTexCoord2f( ( i * discrTexWidth / width ) + 0.5,
+                    0.5 - ( ( j + 1 ) * discrTexHeight / height ) );
       glVertex3f( 0.0, 0.0, +discrHeight );
-      glTexCoord2f( 0.5 + ( i + 1 ) * discrTexWidth / width,
-                    0.5 - ( j + 1 ) * discrTexHeight / height );
+      glTexCoord2f( 0.5 + ( ( i + 1 ) * discrTexWidth / width ),
+                    0.5 - ( ( j + 1 ) * discrTexHeight / height ) );
       glVertex3f( +discrWidth, 0.0, +discrHeight );
-      glTexCoord2f( 0.5 + ( i + 1 ) * discrTexWidth / width, 0.5 - j * discrTexHeight / height );
+      glTexCoord2f( 0.5 + ( ( i + 1 ) * discrTexWidth / width ),
+                    0.5 - j * discrTexHeight / height );
       glVertex3f( +discrWidth, 0.0, 0.0 );
       glTexCoord2f( 0.5 + i * discrTexWidth / width, 0.5 - j * discrTexHeight / height );
       glVertex3f( 0.0, 0.0, 0.0 );
@@ -934,73 +939,73 @@ void GUI::drawBox(
 
     glBegin( GL_QUADS );
     glNormal3f( 0., 0., -um );
-    glTexCoord2f( 0.0f, 0.0f );
+    glTexCoord2f( 0.0F, 0.0F );
     glVertex3f( xmin, ymin, zmin );
-    glTexCoord2f( 1.0f, 0.0f );
+    glTexCoord2f( 1.0F, 0.0F );
     glVertex3f( xmin, ymax, zmin );
-    glTexCoord2f( 1.0f, 1.0f );
+    glTexCoord2f( 1.0F, 1.0F );
     glVertex3f( xmax, ymax, zmin );
-    glTexCoord2f( 0.0f, 1.0f );
+    glTexCoord2f( 0.0F, 1.0F );
     glVertex3f( xmax, ymin, zmin );
     glEnd();
 
     glBegin( GL_QUADS );
     glNormal3f( um, 0., 0. );
-    glTexCoord2f( 0.0f, 0.0f );
+    glTexCoord2f( 0.0F, 0.0F );
     glVertex3f( xmax, ymin, zmin );
-    glTexCoord2f( 1.0f, 0.0f );
+    glTexCoord2f( 1.0F, 0.0F );
     glVertex3f( xmax, ymax, zmin );
-    glTexCoord2f( 1.0f, 1.0f );
+    glTexCoord2f( 1.0F, 1.0F );
     glVertex3f( xmax, ymax, zmax );
-    glTexCoord2f( 0.0f, 1.0f );
+    glTexCoord2f( 0.0F, 1.0F );
     glVertex3f( xmax, ymin, zmax );
     glEnd();
 
     glBegin( GL_QUADS );
     glNormal3f( 0., 0., um );
-    glTexCoord2f( 0.0f, 0.0f );
+    glTexCoord2f( 0.0F, 0.0F );
     glVertex3f( xmax, ymin, zmax );
-    glTexCoord2f( 1.0f, 0.0f );
+    glTexCoord2f( 1.0F, 0.0F );
     glVertex3f( xmax, ymax, zmax );
-    glTexCoord2f( 1.0f, 1.0f );
+    glTexCoord2f( 1.0F, 1.0F );
     glVertex3f( xmin, ymax, zmax );
-    glTexCoord2f( 0.0f, 1.0f );
+    glTexCoord2f( 0.0F, 1.0F );
     glVertex3f( xmin, ymin, zmax );
     glEnd();
 
     glBegin( GL_QUADS );
     glNormal3f( -um, 0., 0. );
-    glTexCoord2f( 0.0f, 0.0f );
+    glTexCoord2f( 0.0F, 0.0F );
     glVertex3f( xmin, ymin, zmax );
-    glTexCoord2f( 1.0f, 0.0f );
+    glTexCoord2f( 1.0F, 0.0F );
     glVertex3f( xmin, ymax, zmax );
-    glTexCoord2f( 1.0f, 1.0f );
+    glTexCoord2f( 1.0F, 1.0F );
     glVertex3f( xmin, ymax, zmin );
-    glTexCoord2f( 0.0f, 1.0f );
+    glTexCoord2f( 0.0F, 1.0F );
     glVertex3f( xmin, ymin, zmin );
     glEnd();
 
     glBegin( GL_QUADS );
     glNormal3f( 0., um, 0. );
-    glTexCoord2f( 0.0f, 0.0f );
+    glTexCoord2f( 0.0F, 0.0F );
     glVertex3f( xmin, ymax, zmin );
-    glTexCoord2f( 1.0f, 0.0f );
+    glTexCoord2f( 1.0F, 0.0F );
     glVertex3f( xmin, ymax, zmax );
-    glTexCoord2f( 1.0f, 1.0f );
+    glTexCoord2f( 1.0F, 1.0F );
     glVertex3f( xmax, ymax, zmax );
-    glTexCoord2f( 0.0f, 1.0f );
+    glTexCoord2f( 0.0F, 1.0F );
     glVertex3f( xmax, ymax, zmin );
     glEnd();
 
     glBegin( GL_QUADS );
     glNormal3f( 0., -um, 0. );
-    glTexCoord2f( 0.0f, 0.0f );
+    glTexCoord2f( 0.0F, 0.0F );
     glVertex3f( xmax, ymin, zmin );
-    glTexCoord2f( 1.0f, 0.0f );
+    glTexCoord2f( 1.0F, 0.0F );
     glVertex3f( xmax, ymin, zmax );
-    glTexCoord2f( 1.0f, 1.0f );
+    glTexCoord2f( 1.0F, 1.0F );
     glVertex3f( xmin, ymin, zmax );
-    glTexCoord2f( 0.0f, 1.0f );
+    glTexCoord2f( 0.0F, 1.0F );
     glVertex3f( xmin, ymin, zmin );
     glEnd();
   } else {
@@ -1008,73 +1013,73 @@ void GUI::drawBox(
 
     glBegin( GL_QUADS );
     glNormal3f( 0., 0., -um );
-    glTexCoord2f( 0.0f, 0.0f );
+    glTexCoord2f( 0.0F, 0.0F );
     glVertex3f( xmin, ymin, zmin );
-    glTexCoord2f( 0.0f, 1.0f );
+    glTexCoord2f( 0.0F, 1.0F );
     glVertex3f( xmax, ymin, zmin );
-    glTexCoord2f( 1.0f, 1.0f );
+    glTexCoord2f( 1.0F, 1.0F );
     glVertex3f( xmax, ymax, zmin );
-    glTexCoord2f( 1.0f, 0.0f );
+    glTexCoord2f( 1.0F, 0.0F );
     glVertex3f( xmin, ymax, zmin );
     glEnd();
 
     glBegin( GL_QUADS );
     glNormal3f( um, 0., 0. );
-    glTexCoord2f( 0.0f, 0.0f );
+    glTexCoord2f( 0.0F, 0.0F );
     glVertex3f( xmax, ymin, zmin );
-    glTexCoord2f( 0.0f, 1.0f );
+    glTexCoord2f( 0.0F, 1.0F );
     glVertex3f( xmax, ymin, zmax );
-    glTexCoord2f( 1.0f, 1.0f );
+    glTexCoord2f( 1.0F, 1.0F );
     glVertex3f( xmax, ymax, zmax );
-    glTexCoord2f( 1.0f, 0.0f );
+    glTexCoord2f( 1.0F, 0.0F );
     glVertex3f( xmax, ymax, zmin );
     glEnd();
 
     glBegin( GL_QUADS );
     glNormal3f( 0., 0., um );
-    glTexCoord2f( 0.0f, 0.0f );
+    glTexCoord2f( 0.0F, 0.0F );
     glVertex3f( xmax, ymin, zmax );
-    glTexCoord2f( 0.0f, 1.0f );
+    glTexCoord2f( 0.0F, 1.0F );
     glVertex3f( xmin, ymin, zmax );
-    glTexCoord2f( 1.0f, 1.0f );
+    glTexCoord2f( 1.0F, 1.0F );
     glVertex3f( xmin, ymax, zmax );
-    glTexCoord2f( 1.0f, 0.0f );
+    glTexCoord2f( 1.0F, 0.0F );
     glVertex3f( xmax, ymax, zmax );
     glEnd();
 
     glBegin( GL_QUADS );
     glNormal3f( -um, 0., 0. );
-    glTexCoord2f( 0.0f, 0.0f );
+    glTexCoord2f( 0.0F, 0.0F );
     glVertex3f( xmin, ymin, zmax );
-    glTexCoord2f( 0.0f, 1.0f );
+    glTexCoord2f( 0.0F, 1.0F );
     glVertex3f( xmin, ymin, zmin );
-    glTexCoord2f( 1.0f, 1.0f );
+    glTexCoord2f( 1.0F, 1.0F );
     glVertex3f( xmin, ymax, zmin );
-    glTexCoord2f( 1.0f, 0.0f );
+    glTexCoord2f( 1.0F, 0.0F );
     glVertex3f( xmin, ymax, zmax );
     glEnd();
 
     glBegin( GL_QUADS );
     glNormal3f( 0., um, 0. );
-    glTexCoord2f( 0.0f, 0.0f );
+    glTexCoord2f( 0.0F, 0.0F );
     glVertex3f( xmin, ymax, zmin );
-    glTexCoord2f( 0.0f, 1.0f );
+    glTexCoord2f( 0.0F, 1.0F );
     glVertex3f( xmax, ymax, zmin );
-    glTexCoord2f( 1.0f, 1.0f );
+    glTexCoord2f( 1.0F, 1.0F );
     glVertex3f( xmax, ymax, zmax );
-    glTexCoord2f( 1.0f, 0.0f );
+    glTexCoord2f( 1.0F, 0.0F );
     glVertex3f( xmin, ymax, zmax );
     glEnd();
 
     glBegin( GL_QUADS );
     glNormal3f( 0., -um, 0. );
-    glTexCoord2f( 0.0f, 0.0f );
+    glTexCoord2f( 0.0F, 0.0F );
     glVertex3f( xmax, ymin, zmin );
-    glTexCoord2f( 0.0f, 1.0f );
+    glTexCoord2f( 0.0F, 1.0F );
     glVertex3f( xmin, ymin, zmin );
-    glTexCoord2f( 1.0f, 1.0f );
+    glTexCoord2f( 1.0F, 1.0F );
     glVertex3f( xmin, ymin, zmax );
-    glTexCoord2f( 1.0f, 0.0f );
+    glTexCoord2f( 1.0F, 0.0F );
     glVertex3f( xmax, ymin, zmax );
     glEnd();
   }
@@ -1132,15 +1137,15 @@ void GUI::drawPlane( GLfloat planeABCD[4],
   // GUI::drawFloor desenha plano com normal = (0,1,0)
   // rotação do plano deve transformar o vetor (0,1,0) no vetor n do plano
   //(0,1,0).n = |(0,1,0)|.|n|.cos(angle)
-  Vetor3D n    = Vetor3D( planeABCD[0], planeABCD[1], planeABCD[2] );
-  float   cos  = n.y / n.modulo();  // prodEscalar/(|n|.|(0,1,0)|)
-  Vetor3D axis = Vetor3D( 0, 1, 0 ).prodVetorial( n );
-  glRotatef( acos( cos ) * 180. / PI, axis.x, axis.y, axis.z );
+  qxgl::Vetor3D n    = qxgl::Vetor3D( planeABCD[0], planeABCD[1], planeABCD[2] );
+  float         cos  = n.y / n.magnitude();  // prodEscalar/(|n|.|(0,1,0)|)
+  qxgl::Vetor3D axis = qxgl::Vetor3D( 0, 1, 0 ) ^ ( n );
+  glRotatef( acos( cos ) * 180. / qxgl::constants::PI, axis.x, axis.y, axis.z );
   // distância do plano para a origem
   // para um ponto qualquer p pertencente ao plano,
   // p.n = |p|.|n|.cos(theta)
   // dist = |p|.cos(theta) = p.n/|n| = xyz.ABC/|n| = -D/|n|
-  float dist = -planeABCD[3] / n.modulo();
+  float dist = -planeABCD[3] / n.magnitude();
   glTranslatef( 0.0, dist, 0.0 );
   float altura = 0.01 * glutGUI::orthof * 200.0;
   GUI::drawBox(
@@ -1182,21 +1187,21 @@ void GUI::drawPlaneAL( GLfloat planeABCD[4],
 // definindo a equacao do plano de maneira mais intuitiva
 //   passando a direcao perpendicular ao plano (n não precisa estar normalizado, pois está sendo
 //   normalizado dentro) e a distancia minima do plano para a origem
-void GUI::drawPlane( Vetor3D n,
-                     GLfloat distMinPlanoOrigem,
-                     float   width,
-                     float   height,
-                     float   discrWidth,
-                     float   discrHeight,
-                     float   texWidth,
-                     float   texHeight ) {
+void GUI::drawPlane( qxgl::Vetor3D n,
+                     GLfloat       distMinPlanoOrigem,
+                     float         width,
+                     float         height,
+                     float         discrWidth,
+                     float         discrHeight,
+                     float         texWidth,
+                     float         texHeight ) {
   enum { X, Y, Z, W };
 
   GLfloat dot;
 
   GLfloat groundplane[4];
   // normalizando o vetor normal do plano
-  n.normaliza();
+  n.normalize();
   groundplane[X] = n.x;
   groundplane[Y] = n.y;
   groundplane[Z] = n.z;

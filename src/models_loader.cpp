@@ -125,8 +125,8 @@ void Model3D::draw( bool useOriginalColors ) {
 //             vertex.texCoord[0] = mesh->mTextureCoords[0][i].x;
 //             vertex.texCoord[1] = mesh->mTextureCoords[0][i].y;
 //         } else {
-//             vertex.texCoord[0] = 0.0f;
-//             vertex.texCoord[1] = 0.0f;
+//             vertex.texCoord[0] = 0.0F;
+//             vertex.texCoord[1] = 0.0F;
 //         }
 
 //         m.vertices.push_back(vertex);

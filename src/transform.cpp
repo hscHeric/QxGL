@@ -39,8 +39,8 @@ void Transform::updateByMouse2D() {
 }
 
 void Transform::reset() {
-  this->pos             = Vetor3D( 0.0, 0.0, 0.0 );
-  this->rot             = Vetor3D( 0.0, 0.0, 0.0 );
-  this->esc             = Vetor3D( 1.0, 1.0, 1.0 );
+  this->pos             = qxgl::Vetor3D( 0.0, 0.0, 0.0 );
+  this->rot             = qxgl::Vetor3D( 0.0, 0.0, 0.0 );
+  this->esc             = qxgl::Vetor3D( 1.0, 1.0, 1.0 );
   this->showLocalOrigin = true;
 }

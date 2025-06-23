@@ -10,7 +10,7 @@
 class CameraDistante : public Camera {
 public:
   CameraDistante();
-  CameraDistante( Vetor3D e, Vetor3D c, Vetor3D u );
+  CameraDistante( qxgl::Vetor3D e, qxgl::Vetor3D c, qxgl::Vetor3D u );
   CameraDistante( GLfloat ex,
                   GLfloat ey,
                   GLfloat ez,
@@ -22,13 +22,13 @@ public:
                   GLfloat uz );
   ~CameraDistante() = default;
 
-  void    zoom( GLfloat /*unused*/, GLfloat /*unused*/ ) override;
-  void    translatex( GLfloat /*unused*/, GLfloat /*unused*/ ) override;
-  void    translatey( GLfloat /*unused*/, GLfloat /*unused*/ ) override;
-  void    rotatex( GLfloat /*unused*/, GLfloat /*unused*/ ) override;
-  void    rotatey( GLfloat /*unused*/, GLfloat /*unused*/ ) override;
-  void    rotatez( GLfloat /*unused*/, GLfloat /*unused*/ ) override;
-  Vetor3D getPickedPoint( GLfloat /*unused*/, GLfloat /*unused*/ ) override;
+  void          zoom( GLfloat /*unused*/, GLfloat /*unused*/ ) override;
+  void          translatex( GLfloat /*unused*/, GLfloat /*unused*/ ) override;
+  void          translatey( GLfloat /*unused*/, GLfloat /*unused*/ ) override;
+  void          rotatex( GLfloat /*unused*/, GLfloat /*unused*/ ) override;
+  void          rotatey( GLfloat /*unused*/, GLfloat /*unused*/ ) override;
+  void          rotatez( GLfloat /*unused*/, GLfloat /*unused*/ ) override;
+  qxgl::Vetor3D getPickedPoint( GLfloat /*unused*/, GLfloat /*unused*/ ) override;
 };
 
 #endif

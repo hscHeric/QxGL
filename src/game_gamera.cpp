@@ -1,12 +1,11 @@
 #include "game_camera.hpp"
 
 CameraJogo::CameraJogo() : Camera() {
-  c.z = e.z - 1;
-
+  c.z    = e.z - 1.0F;
   estilo = CAMJOGO;
 }
 
-CameraJogo::CameraJogo( Vetor3D e, Vetor3D c, Vetor3D u ) : Camera( e, c, u ) {
+CameraJogo::CameraJogo( qxgl::Vetor3D e, qxgl::Vetor3D c, qxgl::Vetor3D u ) : Camera( e, c, u ) {
   estilo = CAMJOGO;
 }
 
@@ -24,112 +23,71 @@ CameraJogo::CameraJogo( GLfloat ex,
 }
 
 void CameraJogo::zoom( GLfloat win_y, GLfloat last_y ) {
-  // vetor do olho(eye) ao centro(center)
-  Vetor3D Vec = c.subtracao( e );
+  const float DELTA        = ( win_y - last_y ) / 20.0F;
+  const auto  DIRECTION    = c - e;
+  const auto  DISPLACEMENT = DIRECTION * DELTA;
 
-  e = e.subtracao( Vec.multiplicacao( ( win_y - last_y ) / 20.0 ) );
-  c = c.subtracao( Vec.multiplicacao( ( win_y - last_y ) / 20.0 ) );
+  e -= DISPLACEMENT;
+  c -= DISPLACEMENT;
 }
 
-//---------------------------------------------------------------------------
 void CameraJogo::translatex( GLfloat win_x, GLfloat last_x ) {
-  // vetor do olho(eye) ao centro(center)
-  Vetor3D Vec = c.subtracao( e );
-  // vetor no sentido positivo da direcao x
-  Vetor3D Xpos = Vec.prodVetorial( u );
+  const float DELTA           = ( last_x - win_x ) / 30.0F;
+  const auto  VIEW_DIRECTION  = c - e;
+  const auto  RIGHT_DIRECTION = VIEW_DIRECTION ^ u;  // Produto vetorial
+  const auto  DISPLACEMENT    = RIGHT_DIRECTION * DELTA;
 
-  e = e.subtracao( Xpos.multiplicacao( ( last_x - win_x ) / 30.0 ) );
-  c = c.subtracao( Xpos.multiplicacao( ( last_x - win_x ) / 30.0 ) );
+  e -= DISPLACEMENT;
+  c -= DISPLACEMENT;
 }
 
-//---------------------------------------------------------------------------
 void CameraJogo::translatey( GLfloat win_y, GLfloat last_y ) {
-  e = e.soma( u.multiplicacao( ( last_y - win_y ) / 30.0 ) );
-  c = c.soma( u.multiplicacao( ( last_y - win_y ) / 30.0 ) );
+  const float DELTA        = ( last_y - win_y ) / 30.0F;
+  const auto  DISPLACEMENT = u * DELTA;
+
+  e += DISPLACEMENT;
+  c += DISPLACEMENT;
 }
 
-//---------------------------------------------------------------------------
 void CameraJogo::rotatex( GLfloat win_y, GLfloat last_y ) {
-  c = c.soma( u.multiplicacao( ( last_y - win_y ) / 500.0 ) );
+  const float DELTA = ( last_y - win_y ) / 500.0F;
+  c += u * DELTA;
 
-  // Vec normalizado
-  Vetor3D N = c.subtracao( e );
-  N.normaliza();
-  c = e.soma( N );
+  const auto FORWARD_VEC = ( c - e ).get_unit();
+  c                      = e + FORWARD_VEC;
 
-  // vetor no sentido positivo da direcao x
-  Vetor3D Xpos = N.prodVetorial( u );
-  u            = Xpos.prodVetorial( N );
-  u.normaliza();
+  const auto RIGHT_VEC = FORWARD_VEC ^ u;
+  u                    = ( RIGHT_VEC ^ FORWARD_VEC ).get_unit();
 }
 
-//---------------------------------------------------------------------------
 void CameraJogo::rotatey( GLfloat win_x, GLfloat last_x ) {
-  // vetor do olho(eye) ao centro(center)
-  Vetor3D Vec = c.subtracao( e );
-  // vetor no sentido positivo da direcao x
-  Vetor3D Xpos = Vec.prodVetorial( u );
+  const float DELTA           = ( last_x - win_x ) / 500.0F;
+  const auto  VIEW_DIRECTION  = c - e;
+  const auto  RIGHT_DIRECTION = VIEW_DIRECTION ^ u;
+  c -= RIGHT_DIRECTION * DELTA;
 
-  c = c.subtracao( Xpos.multiplicacao( ( last_x - win_x ) / 500.0 ) );
-
-  // Vec normalizado
-  Vetor3D N = c.subtracao( e );
-  N.normaliza();
-  c = e.soma( N );
-
-  // novo-----------------------------------
-  // atualizacao de u correspondente a nao deixar rotacionar em torno de z_
-  Vetor3D up;
-  if ( u.y >= 0.0 ) {
-    up = Vetor3D( 0.0, 1.0, 0.0 );
-  } else {
-    up = Vetor3D( 0.0, -1.0, 0.0 );
-  }
-  // mantendo u perpendicular a x_ e z_ (u = y_)
-  // vetor do centro(center) ao olho(eye)
-  Vetor3D Vce = e - c;  // z_
-  // x local atualizado
-  Vetor3D x_ = up ^ Vce;  // x_ (neste caso, nao precisa usar x_ unitario)
-  u          = Vce ^ x_;
-  !u;  // normaliza (torna unitario)
-  // fim_novo-------------------------------
+  const auto FORWARD_VEC   = ( c - e ).get_unit();
+  c                        = e + FORWARD_VEC;
+  const auto WORLD_UP      = qxgl::Vetor3D( 0.0F, 1.0F, 0.0F );
+  const auto NEW_RIGHT_VEC = ( WORLD_UP ^ FORWARD_VEC ).get_unit();
+  u                        = ( FORWARD_VEC ^ NEW_RIGHT_VEC ).get_unit();
 }
 
-//---------------------------------------------------------------------------
 void CameraJogo::rotatez( GLfloat win_x, GLfloat last_x ) {
-  // vetor do olho(eye) ao centro(center)
-  Vetor3D Vec = c.subtracao( e );
-  // vetor no sentido positivo da direcao x
-  Vetor3D Xpos = Vec.prodVetorial( u );
-  Xpos.normaliza();
+  const float DELTA = ( last_x - win_x ) / 300.0F;
 
-  // modificando o vetor up
-  u = u.subtracao( Xpos.multiplicacao( ( last_x - win_x ) / 300.0 ) );
-  u.normaliza();
+  const auto RIGHT_VEC = ( ( c - e ) ^ u ).get_unit();
+
+  u -= RIGHT_VEC * DELTA;
+  u.normalize();
 }
 
-//---------------------------------------------------------------------------
-// passando o ponto local a camera (x,y,-1) para as coordenadas do mundo
-Vetor3D CameraJogo::getPickedPoint( GLfloat x, GLfloat y ) {
-  // calculando a base da camera
-  // vetor do centro(center) ao olho(eye) - Zpos
-  Vetor3D Vce = e.subtracao( c );
-  Vce.normaliza();
-  // vetor no sentido positivo da direcao x
-  Vetor3D Xpos = u.prodVetorial( Vce );
-  Xpos.normaliza();
+qxgl::Vetor3D CameraJogo::getPickedPoint( GLfloat x, GLfloat y ) {
+  const auto Z_AXIS = ( e - c ).get_unit();       // Vetor "para frente" da câmera
+  const auto X_AXIS = ( u ^ Z_AXIS ).get_unit();  // Vetor "para a direita" da câmera
+  const auto Y_AXIS = u;                          // O vetor 'up' da câmera já é o eixo Y local
 
-  // mudanca da base da camera para a base do mundo (canonica)
-  float dx = Xpos.x * x + u.x * y + Vce.x * -1;
-  float dy = Xpos.y * x + u.y * y + Vce.y * -1;
-  float dz = Xpos.z * x + u.z * y + Vce.z * -1;
+  const auto WORLD_OFFSET = ( X_AXIS * x ) + ( Y_AXIS * y ) - ( Z_AXIS * 1.0F );
 
-  // translacao em relacao a posicao da camera
-  dx += e.x;
-  dy += e.y;
-  dz += e.z;
-
-  return { dx, dy, dz };
+  return e + WORLD_OFFSET;
 }
-
-//---------------------------------------------------------------------------

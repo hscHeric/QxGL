@@ -23,6 +23,7 @@
 #include "textures_loader.hpp"
 
 // GUI e Gerenciamento de Janela
+#include "draw.hpp"
 #include "extra.hpp"
 #include "gui.hpp"
 

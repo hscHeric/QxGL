@@ -1,59 +1,60 @@
-#ifndef MODEL3D_H
-  #define MODEL3D_H
+#ifndef QXGL_MODEL_3D_HPP
+#define QXGL_MODEL_3D_HPP
 
-  #include <GL/glut.h>
-  #include <assimp/Importer.hpp>
-  #include <assimp/postprocess.h>
-  #include <assimp/scene.h>
+#include <GL/gl.h>
+#include <assimp/Importer.hpp>
+#include <assimp/postprocess.h>
+#include <assimp/scene.h>
+#include <string>
 
-class Model3D {
-private:
-  const aiScene   *scene;
-  Assimp::Importer importer;
+namespace qxgl {
 
-  void applyMaterial( const aiMaterial *material );
-  void drawMesh( const aiMesh *mesh, bool useOriginalColors );
-  void drawNode( const aiNode *node, bool useOriginalColors );
+  /**
+   * @class Model3D
+   * @brief Carrega um modelo 3D de um arquivo e o renderiza usando OpenGL legado.
+   * @details Utiliza a biblioteca Assimp para carregar uma vasta gama de formatos de modelo
+   * e percorre a hierarquia de nós do modelo para renderização.
+   */
+  class Model3D {
+  private:
+    const aiScene   *scene_{ nullptr };
+    Assimp::Importer importer_;
 
-public:
-  Model3D( const char *filepath );
-  void draw( bool useOriginalColors = true );
-};
+    /**
+     * @brief Aplica o material de uma malha específica usando glMaterial.
+     * @param material O ponteiro para o material do Assimp.
+     */
+    void apply_material( const aiMaterial *material ) const;
 
-#endif  // MODEL3D_H
+    /**
+     * @brief Renderiza uma única malha (mesh) do modelo.
+     * @param mesh A malha a ser renderizada.
+     * @param use_original_colors Se verdadeiro, tenta aplicar as cores de vértice ou materiais.
+     */
+    void draw_mesh( const aiMesh *mesh, bool use_original_colors ) const;
 
-// #ifndef MODEL3D_H
-// #define MODEL3D_H
+    /**
+     * @brief Percorre recursivamente a árvore de nós da cena para renderizar o modelo.
+     * @param node O nó atual a ser renderizado.
+     * @param use_original_colors Passado para a função draw_mesh.
+     */
+    void draw_node( const aiNode *node, bool use_original_colors ) const;
 
-// #include <assimp/Importer.hpp>
-// #include <assimp/scene.h>
-// #include <assimp/postprocess.h>
-// #include <vector>
-// #include <GL/gl.h>
-// #include <iostream>
+  public:
+    /**
+     * @brief Construtor que carrega um modelo 3D a partir de um arquivo.
+     * @param filepath O caminho para o arquivo do modelo.
+     */
+    explicit Model3D( const std::string &filepath );
 
-// struct Vertex {
-//     GLfloat position[3];
-//     GLfloat normal[3];
-//     GLfloat texCoord[2];
-// };
+    /**
+     * @brief Renderiza o modelo completo na cena.
+     * @param use_original_colors Se verdadeiro, aplica os materiais e cores definidos no arquivo do
+     * modelo.
+     */
+    void draw( bool use_original_colors = true ) const;
+  };
 
-// struct Mesh {
-//     std::vector<Vertex> vertices;
-//     std::vector<GLuint> indices;
-// };
+}  // namespace qxgl
 
-// class Model3D {
-// private:
-//     std::vector<Mesh> meshes;
-
-//     void processNode(aiNode *node, const aiScene *scene);
-//     Mesh processMesh(aiMesh *mesh, const aiScene *scene);
-
-// public:
-//     Model3D(const char *path);
-//     void drawMesh(Mesh mesh);
-//     void draw();
-// };
-
-// #endif // MODEL3D_H
+#endif  // QXGL_MODEL_3D_HPP

@@ -1,10 +1,3 @@
-/**
- * @file vector_3d.hpp
- * @brief Definição da classe Vetor3D para manipulação de vetores no espaço 3D.
- * @author Gemini
- * @date 23 de Junho de 2025
- */
-
 #ifndef QXGL_VECTOR_3D_HPP
 #define QXGL_VECTOR_3D_HPP
 

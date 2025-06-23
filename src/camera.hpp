@@ -4,7 +4,7 @@
 #define CAMDIST 1
 #define CAMJOGO 2
 
-#include "Vetor3D.h"
+#include "vector_3d.hpp"
 
 #include <GL/gl.h>
 #include <GL/glu.h>

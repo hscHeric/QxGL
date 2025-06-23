@@ -1,36 +1,26 @@
 #ifndef MODEL3D_H
-#define MODEL3D_H
+  #define MODEL3D_H
 
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
-#include <GL/glut.h>
+  #include <GL/glut.h>
+  #include <assimp/Importer.hpp>
+  #include <assimp/postprocess.h>
+  #include <assimp/scene.h>
 
 class Model3D {
 private:
-    const aiScene* scene;
-    Assimp::Importer importer;
+  const aiScene   *scene;
+  Assimp::Importer importer;
 
-    void applyMaterial(const aiMaterial* material);
-    void drawMesh(const aiMesh* mesh, bool useOriginalColors);
-    void drawNode(const aiNode* node, bool useOriginalColors);
+  void applyMaterial( const aiMaterial *material );
+  void drawMesh( const aiMesh *mesh, bool useOriginalColors );
+  void drawNode( const aiNode *node, bool useOriginalColors );
 
 public:
-    Model3D(const char* filepath);
-    void draw(bool useOriginalColors = true);
+  Model3D( const char *filepath );
+  void draw( bool useOriginalColors = true );
 };
 
-#endif // MODEL3D_H
-
-
-
-
-
-
-
-
-
-
+#endif  // MODEL3D_H
 
 // #ifndef MODEL3D_H
 // #define MODEL3D_H

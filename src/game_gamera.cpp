@@ -1,4 +1,4 @@
-#include "CameraJogo.h"
+#include "game_camera.hpp"
 
 CameraJogo::CameraJogo() : Camera() {
   c.z = e.z - 1;

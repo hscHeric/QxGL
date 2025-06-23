@@ -1,4 +1,4 @@
-#include "Camera.h"
+#include "camera.hpp"
 
 Camera::Camera() : estilo( 0 ) {
   e = Vetor3D();

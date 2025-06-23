@@ -9,21 +9,21 @@
  * da biblioteca QXGL com um único #include.
  */
 // Utilitários e Estruturas de Dados
-#include "Transform.h"
-#include "Vetor3D.h"
+#include "transform.hpp"
+#include "vector_3d.hpp"
 
 // Câmera
-#include "Camera.h"
-#include "CameraDistante.h"
-#include "CameraJogo.h"
+#include "camera.hpp"
+#include "game_camera.hpp"
+#include "orbit_camera.hpp"
 
 // Renderização e Desenho
-#include "Desenha.h"
-#include "Model3D.h"
-#include "OpenTextures.h"
+#include "draw.hpp"
+#include "models_loader.hpp"
+#include "textures_loader.hpp"
 
 // GUI e Gerenciamento de Janela
-#include "extra.h"
-#include "gui.h"
+#include "extra.hpp"
+#include "gui.hpp"
 
 #endif  // !QXGL_HPP

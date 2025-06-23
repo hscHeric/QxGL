@@ -1,7 +1,7 @@
 #ifndef CAMERADISTANTE_H
 #define CAMERADISTANTE_H
 
-#include "Camera.h"
+#include "camera.hpp"
 
 #include <GL/gl.h>
 #include <GL/glu.h>

@@ -1,4 +1,4 @@
-#include "CameraDistante.h"
+#include "orbit_camera.hpp"
 
 CameraDistante::CameraDistante() : Camera() {
   c.z = 0;

@@ -1,96 +1,99 @@
 #include "Model3D.h"
+
 #include <cstdio>
 
 // Aplica materiais do modelo ao OpenGL
-void Model3D::applyMaterial(const aiMaterial* material) {
-    aiColor4D diffuse, specular, ambient, emissive;
-    float shininess = 1.0;
+void Model3D::applyMaterial( const aiMaterial *material ) {
+  aiColor4D diffuse, specular, ambient, emissive;
+  float     shininess = 1.0;
 
-    if (AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_DIFFUSE, &diffuse))
-        glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, (float*)&diffuse);
-    if (AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_SPECULAR, &specular))
-        glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, (float*)&specular);
-    if (AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_AMBIENT, &ambient))
-        glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, (float*)&ambient);
-    if (AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_EMISSIVE, &emissive))
-        glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, (float*)&emissive);
-    if (AI_SUCCESS == aiGetMaterialFloat(material, AI_MATKEY_SHININESS, &shininess))
-        glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
+  if ( AI_SUCCESS == aiGetMaterialColor( material, AI_MATKEY_COLOR_DIFFUSE, &diffuse ) )
+    glMaterialfv( GL_FRONT_AND_BACK, GL_DIFFUSE, (float *)&diffuse );
+  if ( AI_SUCCESS == aiGetMaterialColor( material, AI_MATKEY_COLOR_SPECULAR, &specular ) )
+    glMaterialfv( GL_FRONT_AND_BACK, GL_SPECULAR, (float *)&specular );
+  if ( AI_SUCCESS == aiGetMaterialColor( material, AI_MATKEY_COLOR_AMBIENT, &ambient ) )
+    glMaterialfv( GL_FRONT_AND_BACK, GL_AMBIENT, (float *)&ambient );
+  if ( AI_SUCCESS == aiGetMaterialColor( material, AI_MATKEY_COLOR_EMISSIVE, &emissive ) )
+    glMaterialfv( GL_FRONT_AND_BACK, GL_EMISSION, (float *)&emissive );
+  if ( AI_SUCCESS == aiGetMaterialFloat( material, AI_MATKEY_SHININESS, &shininess ) )
+    glMaterialf( GL_FRONT_AND_BACK, GL_SHININESS, shininess );
 }
 
 // Desenha os vértices de um mesh
-void Model3D::drawMesh(const aiMesh* mesh, bool useOriginalColors) {
-    glBegin(GL_TRIANGLES);
-    for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
-        const aiFace& face = mesh->mFaces[i];
-        for (unsigned int j = 0; j < face.mNumIndices; j++) {
-            int index = face.mIndices[j];
+void Model3D::drawMesh( const aiMesh *mesh, bool useOriginalColors ) {
+  glBegin( GL_TRIANGLES );
+  for ( unsigned int i = 0; i < mesh->mNumFaces; i++ ) {
+    const aiFace &face = mesh->mFaces[i];
+    for ( unsigned int j = 0; j < face.mNumIndices; j++ ) {
+      int index = face.mIndices[j];
 
-            if (useOriginalColors && mesh->HasVertexColors(0)) {
-                glColor4fv((GLfloat*)&mesh->mColors[0][index]);
-            }
+      if ( useOriginalColors && mesh->HasVertexColors( 0 ) ) {
+        glColor4fv( (GLfloat *)&mesh->mColors[0][index] );
+      }
 
-            if (mesh->HasNormals()) {
-                glNormal3fv(&mesh->mNormals[index].x);
-            }
+      if ( mesh->HasNormals() ) {
+        glNormal3fv( &mesh->mNormals[index].x );
+      }
 
-            glVertex3fv(&mesh->mVertices[index].x);
-        }
+      glVertex3fv( &mesh->mVertices[index].x );
     }
-    glEnd();
+  }
+  glEnd();
 }
 
 // Desenha um nó da hierarquia do modelo
-void Model3D::drawNode(const aiNode* node, bool useOriginalColors) {
-    aiMatrix4x4 transform = node->mTransformation;
-    transform.Transpose(); // OpenGL usa matriz coluna-maior
-    glPushMatrix();
-    glMultMatrixf((float*)&transform);
+void Model3D::drawNode( const aiNode *node, bool useOriginalColors ) {
+  aiMatrix4x4 transform = node->mTransformation;
+  transform.Transpose();  // OpenGL usa matriz coluna-maior
+  glPushMatrix();
+  glMultMatrixf( (float *)&transform );
 
-    for (unsigned int i = 0; i < node->mNumMeshes; i++) {
-        const aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-        const aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-        if (useOriginalColors) { applyMaterial(material); }
-        drawMesh(mesh, useOriginalColors);
+  for ( unsigned int i = 0; i < node->mNumMeshes; i++ ) {
+    const aiMesh     *mesh     = scene->mMeshes[node->mMeshes[i]];
+    const aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
+    if ( useOriginalColors ) {
+      applyMaterial( material );
     }
+    drawMesh( mesh, useOriginalColors );
+  }
 
-    for (unsigned int i = 0; i < node->mNumChildren; i++) {
-        drawNode(node->mChildren[i], useOriginalColors);
-    }
+  for ( unsigned int i = 0; i < node->mNumChildren; i++ ) {
+    drawNode( node->mChildren[i], useOriginalColors );
+  }
 
-    glPopMatrix();
+  glPopMatrix();
 }
 
 // Construtor
-Model3D::Model3D(const char* filepath) {
-    scene = importer.ReadFile(filepath, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices | aiProcess_PreTransformVertices);
-    if (!scene) {
-        // const char* errorString = importer.GetErrorString();
-        char errorString[150]; strcpy(errorString, importer.GetErrorString());
-        char newfilepath[100] = "../";
-        strcat(newfilepath,filepath);
-        scene = importer.ReadFile(newfilepath, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices | aiProcess_PreTransformVertices);
+Model3D::Model3D( const char *filepath ) {
+  scene =
+    importer.ReadFile( filepath,
+                       aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenSmoothNormals |
+                         aiProcess_JoinIdenticalVertices | aiProcess_PreTransformVertices );
+  if ( !scene ) {
+    // const char* errorString = importer.GetErrorString();
+    char errorString[150];
+    strcpy( errorString, importer.GetErrorString() );
+    char newfilepath[100] = "../";
+    strcat( newfilepath, filepath );
+    scene =
+      importer.ReadFile( newfilepath,
+                         aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenSmoothNormals |
+                           aiProcess_JoinIdenticalVertices | aiProcess_PreTransformVertices );
 
-        if (!scene) {
-            printf("Erro ao carregar o modelo: %s\n", errorString);
-            printf("Erro ao carregar o modelo: %s\n", importer.GetErrorString());
-        }
+    if ( !scene ) {
+      printf( "Erro ao carregar o modelo: %s\n", errorString );
+      printf( "Erro ao carregar o modelo: %s\n", importer.GetErrorString() );
     }
+  }
 }
 
 // Método para desenhar o modelo
-void Model3D::draw(bool useOriginalColors) {
-    if (scene) {
-        drawNode(scene->mRootNode, useOriginalColors);
-    }
+void Model3D::draw( bool useOriginalColors ) {
+  if ( scene ) {
+    drawNode( scene->mRootNode, useOriginalColors );
+  }
 }
-
-
-
-
-
-
-
 
 // #include "Model3D.h"
 // //---------------------------------------------------------------------------
@@ -143,7 +146,8 @@ void Model3D::draw(bool useOriginalColors) {
 // Model3D::Model3D(const char *path)
 // {
 //     Assimp::Importer importer;
-//     const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals);
+//     const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs |
+//     aiProcess_GenNormals);
 
 //     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
 //         std::cerr << "Assimp error: " << importer.GetErrorString() << std::endl;
